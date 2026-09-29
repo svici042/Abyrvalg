@@ -5,6 +5,7 @@
 - [x] Reviewed the initial public commit and ignore rules. The tracked set excludes dependencies, builds, test output, and environment files; the source scan found no apparent credentials or non-example email addresses.
 - [x] README contains the five assignment sections and links to the repository and published demo.
 - [x] Published on GitHub Pages at https://svici042.github.io/Abyrvalg/. The Actions workflow succeeded; direct `/products/1` navigation, live product loading, and the demo checkout through confirmation were checked.
+- [x] Snyk Open Source test checked 36 dependencies and found no vulnerable dependency paths.
 
 ## Still to verify
 
