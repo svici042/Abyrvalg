@@ -6,6 +6,8 @@ Abyrvalg er en responsiv nettbutikkdemo laget som skoleoppgave. Produktkatalog, 
 
 Grensesnittet finnes på norsk og engelsk, og valuta kan velges separat (NOK eller USD). Tema kan byttes mellom lyst og mørkt. Produktdata og bilder hentes fra eksterne tjenester, så prosjektet trenger nettverk for produktvisning.
 
+Demo: [Abyrvalg på GitHub Pages](https://svici042.github.io/Abyrvalg/) · Kildekode: [GitHub-repositoriet](https://github.com/svici042/Abyrvalg).
+
 ## 2. Teknologivalg og grunner
 
 - React og Vite gir et komponentbasert grensesnitt og rask lokal utvikling.
@@ -50,4 +52,4 @@ For nettlesertester mot et lokalt produksjonsbygg: Kjør `$env:PLAYWRIGHT_PREVIE
 
 Kurv, innstillinger og demoordre finnes bare i samme nettleser. Det finnes ingen brukerautentisering, sikker server, enhetssynkronisering eller ekte betaling. Lagerdata er kun til demonstrasjon. Katalogforespørsler går til DummyJSON, og produktbilder lastes fra eksterne servere. Søk bruker engelske produkttekster. Nye produkter fra katalogen trenger oversettelsesdata.
 
-Prosjektet er en demo, ikke en butikk for ekte salg. Kommersiell bruk krever sikker backend, selgeropplysninger og vilkår for salg, levering, retur og personvern. Automatiske tester dokumenterer ikke full WCAG-samsvar. Netlify-publisering er ikke bekreftet; ruting og sikkerhetsheadere må kontrolleres etter publisering.
+Prosjektet er en demo, ikke en butikk for ekte salg. Kommersiell bruk krever sikker backend, selgeropplysninger og vilkår for salg, levering, retur og personvern. Automatiske tester dokumenterer ikke full WCAG-samsvar. GitHub Pages-demoen er publisert og støtter direkte produktruter. Netlify-innstillingene i `netlify.toml` gjelder ikke på GitHub Pages; de faktiske Pages-svarene mangler egendefinerte sikkerhetsheadere.

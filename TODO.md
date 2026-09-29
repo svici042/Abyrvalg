@@ -1,28 +1,25 @@
 # Required follow-up
 
-## Before the first commit
+## Completed and verified for the demo
 
-- [ ] Review the exact Git file set and ignore rules once the project is in its intended repository. This workspace has no `.git`, so staged/tracked files and ignored build or test output cannot yet be confirmed.
-- [ ] Check the proposed commit for credentials, private data, generated artifacts, and demo customer records. A source search found no apparent credentials; the customer examples use fictional `.test` addresses. Review the actual commit contents before committing.
+- [x] Reviewed the initial public commit and ignore rules. The tracked set excludes dependencies, builds, test output, and environment files; the source scan found no apparent credentials or non-example email addresses.
+- [x] README contains the five assignment sections and links to the repository and published demo.
+- [x] Published on GitHub Pages at https://svici042.github.io/Abyrvalg/. The Actions workflow succeeded; direct `/products/1` navigation, live product loading, and the demo checkout through confirmation were checked.
 
-## Assignment and user verification
+## Still to verify
 
-- [x] README includes the five required assignment sections: app, technology choices, local setup, folder structure, and limitations/next steps.
-- [ ] Compare the project with the original React webshop brief and confirm every required feature and submission criterion; the brief is not present in this workspace.
-- [ ] Add the GitHub repository link to the submission when the repository exists.
-- [ ] Add the live deployment link only after an authorised publication.
-- [ ] Manually check keyboard and screen-reader flows, text readability and contrast in both themes, zoom and mobile use, and system reduced-motion and forced-colour modes. Automated checks have coverage for these settings but do not establish WCAG conformance.
+- [ ] Compare the implementation with the original React webshop brief and confirm every submission requirement; the brief is not in this workspace.
+- [ ] Manually assess keyboard and screen-reader flows, text readability and contrast in both themes, zoom/mobile use, and system reduced-motion and forced-colour behaviour. Automated checks are not WCAG certification.
 - [ ] Where feasible, observe older or less technically experienced users completing the main shopping tasks and record usability issues.
-- [ ] Check layout and interaction on physical phones and in another browser engine; current browser coverage uses Chromium emulation.
-- [ ] Verify real DummyJSON search and pagination across pages and confirm helpful behaviour during transient API or image failures. Existing live checks cover catalogue, category/search sorting and direct product refresh; search and pagination behaviour otherwise uses test fixtures.
+- [ ] Check layout and interaction on physical phones and another browser engine; current browser coverage uses Chromium.
+- [ ] Verify real DummyJSON search and pagination across pages, plus helpful behaviour during transient API or image failures. The live checks cover catalogue, search/category sorting, direct product loading, and the purchase flow; other search/pagination cases use fixtures.
+- [ ] Decide whether custom security headers are required. GitHub Pages responses currently lack CSP, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Content-Type-Options`; `netlify.toml` does not apply there.
 
-## After an authorised Netlify deployment
+## Only if moving to Netlify
 
-- [ ] Check live direct product URLs and SPA fallback, plus API and image loading.
-- [ ] Inspect actual response security headers, including CSP, on the deployed site; `netlify.toml` and localhost do not verify production responses.
-- [ ] Complete the purchase flow in a private browser session and confirm the deployed demo behaves as described.
+- [ ] After an authorised Netlify deployment, verify direct routes, SPA fallback, API/images, actual response headers, and the complete purchase flow in a private browser session.
 
 ## Only if this becomes a real shop
 
-- [ ] Provide verified seller details and sales, delivery, returns, and privacy terms.
-- [ ] Replace local demo orders with a secure backend, real authentication, durable order storage, payment integration, and fulfilment processes.
+- [ ] Provide verified seller details, sales/delivery/returns terms, and privacy documentation.
+- [ ] Replace local demo orders with a secure backend, authentication, durable order storage, real payment, and fulfilment.
