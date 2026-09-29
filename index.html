@@ -8,25 +8,9 @@
       content="Utforsk produkter, finn nye favoritter og lag din egen handlekurv i Abyrvalg."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="app-base-path" content="%BASE_URL%" />
     <title>Abyrvalg små funn, store muligheter</title>
-    <script>
-      const redirect = sessionStorage.getItem('github-pages-redirect')
-      if (redirect) {
-        sessionStorage.removeItem('github-pages-redirect')
-        const destination = new URL(redirect)
-        const baseUrl = '%BASE_URL%'
-        if (
-          destination.origin === window.location.origin &&
-          destination.pathname.startsWith(baseUrl)
-        ) {
-          window.history.replaceState(
-            null,
-            '',
-            `${destination.pathname}${destination.search}${destination.hash}`,
-          )
-        }
-      }
-    </script>
+    <script src="%BASE_URL%github-pages-restore.js"></script>
   </head>
   <body>
     <div id="root"></div>
