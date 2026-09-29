@@ -1,0 +1,27 @@
+.wrapper {
+  margin-top: 24px;
+}
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background: var(--action);
+  color: var(--action-text);
+  padding: 17px 20px;
+  border-color: var(--action);
+  font-weight: 600;
+}
+.button:hover:not(:disabled) {
+  background: var(--action-hover);
+}
+.wrapper small {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+}
+.feedback {
+  display: block;
+  margin-top: 12px;
+  font-size: 1rem;
+  color: var(--link);
+}

@@ -1,0 +1,77 @@
+.page {
+  padding: 25px 0;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+.page h1 {
+  font-size: 2.375rem;
+  font-weight: 500;
+  letter-spacing: -1.4px;
+}
+.page h1 span {
+  color: var(--muted);
+  font-size: 1.5rem;
+}
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 50px;
+  align-items: start;
+}
+.summary {
+  background: var(--hero);
+  padding: 28px;
+  border-radius: 10px;
+}
+.summary h2 {
+  font-size: 1.3125rem;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+.summary p {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 1rem;
+}
+.summary .total {
+  border-top: 1px solid var(--separator);
+  padding-top: 22px;
+  margin-top: 22px;
+  font-size: 1.0625rem;
+  flex-wrap: wrap;
+}
+.summary small {
+  display: block;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-top: 25px;
+}
+.back {
+  display: inline-block;
+  margin-top: 25px;
+  font-size: 1rem;
+}
+.checkout {
+  display: block;
+  background: var(--action);
+  color: var(--action-text);
+  padding: 14px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+}
+.checkout:hover {
+  background: var(--action-hover);
+  color: var(--action-text);
+  text-decoration: underline;
+}
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}

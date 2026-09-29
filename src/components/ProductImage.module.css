@@ -1,0 +1,42 @@
+.frame {
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--image-bg);
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.frame img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+}
+.fallback {
+  color: var(--image-text);
+  display: grid;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+.fallback span {
+  font-size: 2rem;
+  line-height: 1;
+}
+.fallback small {
+  font-size: inherit;
+}
+@container (max-width: 8rem) {
+  .fallback {
+    padding: 8px;
+    gap: 0;
+  }
+  .fallback span {
+    font-size: 1.75rem;
+  }
+  .fallback small {
+    display: none;
+  }
+}

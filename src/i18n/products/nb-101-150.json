@@ -1,0 +1,202 @@
+{
+  "101": {
+    "title": "Apple AirPods Max, sølvfarget",
+    "description": "Førsteklasses hodetelefoner som dekker ørene, med lyd av høy kvalitet, tilpasset equalizer og aktiv støydemping. Gir en omsluttende lydopplevelse med stil."
+  },
+  "102": {
+    "title": "Apple AirPower trådløs lader",
+    "description": "En praktisk måte å lade kompatible Apple-enheter trådløst på. Legg enhetene på ladematten for enkel lading."
+  },
+  "103": {
+    "title": "Apple HomePod Mini, kosmisk grå",
+    "description": "En kompakt smarthøyttaler med imponerende lyd som fungerer sømløst med Apple-systemet for en smart hjemopplevelse."
+  },
+  "104": {
+    "title": "Apple iPhone-lader",
+    "description": "En kvalitetslader utviklet for rask og effektiv lading av iPhone, slik at enheten har strøm og er klar til bruk."
+  },
+  "105": {
+    "title": "Apple MagSafe-batteripakke",
+    "description": "En bærbar og praktisk måte å gi en MagSafe-kompatibel iPhone ekstra batteritid på. Festes magnetisk for en sikker forbindelse."
+  },
+  "106": {
+    "title": "Apple Watch Series 4, gullfarget",
+    "description": "En stilfull og avansert smartklokke med pulsmåling, aktivitetsregistrering og en flott Retina-skjerm."
+  },
+  "107": {
+    "title": "Beats Flex trådløse øretelefoner",
+    "description": "Gir en behagelig og allsidig lydopplevelse. Magnetiske ørepropper og opptil 12 timers batteritid gjør dem velegnet til daglig bruk."
+  },
+  "108": {
+    "title": "Plommefarget silikondeksel til iPhone 12 med MagSafe",
+    "description": "Et stilfullt og beskyttende deksel til iPhone 12. MagSafe-teknologi gjør det enkelt å feste tilbehør."
+  },
+  "109": {
+    "title": "Ettbeinsstativ",
+    "description": "Et allsidig kameratilbehør for stabile og justerbare opptak. Gjør det enkelt å ta selfier, gruppebilder og video."
+  },
+  "110": {
+    "title": "Selfielampe til iPhone",
+    "description": "En bærbar og justerbar LED-lampe som gir bedre lys til selfier og videosamtaler. Festes på iPhone for godt belyste bilder."
+  },
+  "111": {
+    "title": "Selfiestang med ettbeinsstativ",
+    "description": "En uttrekkbar og sammenleggbar stang for selfier og gruppebilder. Kompatibel med smarttelefoner og kameraer."
+  },
+  "112": {
+    "title": "Kamerasøyle for TV-studio",
+    "description": "Et profesjonelt støttesystem som gir jevne og presise kamerabevegelser i studio. Velegnet til kringkasting og produksjon."
+  },
+  "113": {
+    "title": "Standard motorsykkel",
+    "description": "En allsidig og pålitelig motorsykkel for ulike kjørestiler. Balansert design gir en behagelig og effektiv kjøreopplevelse."
+  },
+  "114": {
+    "title": "Kawasaki Z800",
+    "description": "En kraftig og smidig sportsmotorsykkel kjent for markant design og ytelse. Avanserte funksjoner gjør den populær blant motorsykkelentusiaster."
+  },
+  "115": {
+    "title": "MotoGP CI.H1",
+    "description": "En motorsykkel med høy ytelse, inspirert av MotoGP-teknologi. Moderne funksjoner og presis konstruksjon gir en spennende kjøreopplevelse."
+  },
+  "116": {
+    "title": "Scooter",
+    "description": "En praktisk og drivstoffgjerrig tohjuling til bypendling. Lav innstigning og brukervennlige kontroller gjør den enkel å manøvrere."
+  },
+  "117": {
+    "title": "Sportsmotorsykkel",
+    "description": "Utviklet for fart og smidighet med en elegant, aerodynamisk profil. Passer for førere som ønsker en dynamisk og spennende kjøreopplevelse."
+  },
+  "118": {
+    "title": "Attitude Super Leaves håndsåpe",
+    "description": "En naturlig og pleiende håndsåpe beriket med planteblader. Renser og tilfører fuktighet slik at hendene føles friske og myke."
+  },
+  "119": {
+    "title": "Olay Ultra Moisture dusjsåpe med sheasmør",
+    "description": "En luksuriøs dusjsåpe som fukter og pleier huden med sheasmør. Gir rikt skum og silkemyk hud."
+  },
+  "120": {
+    "title": "Vaseline Men lotion for kropp og ansikt",
+    "description": "En spesialutviklet lotion som gir langvarig fuktighet til menns hud. Trekker raskt inn og bidrar til å holde huden fuktig og sunn."
+  },
+  "121": {
+    "title": "iPhone 5s",
+    "description": "En klassisk smarttelefon med kompakt design og funksjoner som var avanserte ved lansering. Selv om modellen er eldre, gir den fortsatt en pålitelig brukeropplevelse."
+  },
+  "122": {
+    "title": "iPhone 6",
+    "description": "En stilfull og allsidig smarttelefon med større skjerm og forbedret ytelse. Nye funksjoner og designelementer gjorde den populær i sin tid."
+  },
+  "123": {
+    "title": "iPhone 13 Pro",
+    "description": "En avansert smarttelefon med kraftig kamerasystem, høytytende brikke og flott skjerm. Har avanserte funksjoner for brukere som krever teknologi på høyt nivå."
+  },
+  "124": {
+    "title": "iPhone X",
+    "description": "En flaggskiptelefon med kantløs OLED-skjerm, ansiktsgjenkjenning med Face ID og imponerende ytelse. En milepæl i iPhones design og utvikling."
+  },
+  "125": {
+    "title": "Oppo A57",
+    "description": "En smarttelefon i mellomklassen med elegant design og gode funksjoner. Kombinerer ytelse med en overkommelig pris."
+  },
+  "126": {
+    "title": "Oppo F19 Pro Plus",
+    "description": "En funksjonsrik smarttelefon med særlig vekt på kamera. Avanserte fotofunksjoner og kraftig ytelse gir en førsteklasses brukeropplevelse."
+  },
+  "127": {
+    "title": "Oppo K1",
+    "description": "Oppo K1-serien består av smarttelefoner med ulike funksjoner og spesifikasjoner. Stilfullt design og pålitelig ytelse dekker forskjellige brukerbehov."
+  },
+  "128": {
+    "title": "Realme C35",
+    "description": "En rimelig smarttelefon med de viktigste funksjonene for daglig bruk. Gir pålitelig ytelse og en brukervennlig opplevelse."
+  },
+  "129": {
+    "title": "Realme X",
+    "description": "En smarttelefon i mellomklassen med elegant design og imponerende skjerm. Gir en god balanse mellom ytelse og kamerafunksjoner."
+  },
+  "130": {
+    "title": "Realme XT",
+    "description": "En funksjonsrik smarttelefon med fokus på kamerateknologi. Avanserte kamerasensorer gir bilder og videoer av høy kvalitet for fotoentusiaster."
+  },
+  "131": {
+    "title": "Samsung Galaxy S7",
+    "description": "En flaggskiptelefon med elegant design og avanserte funksjoner. Har høyoppløst skjerm, kraftig kamera og solid ytelse."
+  },
+  "132": {
+    "title": "Samsung Galaxy S8",
+    "description": "En førsteklasses smarttelefon med Infinity Display som gir en flott visuell opplevelse. Har avanserte kamerafunksjoner og moderne teknologi."
+  },
+  "133": {
+    "title": "Samsung Galaxy S10",
+    "description": "En flaggskipmodell med dynamisk AMOLED-skjerm, allsidig kamerasystem og kraftig ytelse. Representerer nyskaping og kvalitet innen smarttelefonteknologi."
+  },
+  "134": {
+    "title": "Vivo S1",
+    "description": "En stilfull smarttelefon i mellomklassen som kombinerer design og ytelse. Har en fargerik skjerm, et godt kamerasystem og pålitelige funksjoner."
+  },
+  "135": {
+    "title": "Vivo V9",
+    "description": "En smarttelefon med elegant design og fokus på selfier av høy kvalitet. Har skjerm med utsparing, dobbelt kamera og moderne utforming."
+  },
+  "136": {
+    "title": "Vivo X21",
+    "description": "En førsteklasses smarttelefon med fokus på moderne teknologi. Har fingeravtrykksleser i skjermen, høyoppløst skjerm og avanserte kamerafunksjoner."
+  },
+  "137": {
+    "title": "Ball til amerikansk fotball",
+    "description": "En klassisk ball til amerikansk fotball. Utviklet for kast og mottak, og en viktig del av utstyret i sporten."
+  },
+  "138": {
+    "title": "Baseball",
+    "description": "En standard baseball med slitesterkt lærovertrekk, laget for kast, slag og mottak under spillet."
+  },
+  "139": {
+    "title": "Baseballhanske",
+    "description": "En beskyttende hanske for baseballspillere. Utviklet for å ta imot ballen og gi komfort og kontroll under spillet."
+  },
+  "140": {
+    "title": "Basketball",
+    "description": "En standard basketball til dribling, skudd og pasninger. Passer til både innendørs og utendørs spill."
+  },
+  "141": {
+    "title": "Basketkurv",
+    "description": "En solid ring med nett som festes på en basketballplate og brukes som mål for skudd og poeng."
+  },
+  "142": {
+    "title": "Cricketball",
+    "description": "En hard lærball til cricket. Ballens hardhet og søm påvirker spillet når den kastes og slås."
+  },
+  "143": {
+    "title": "Cricketkølle",
+    "description": "En trekølle som slagspillere bruker til å slå cricketballen. Finnes i ulike størrelser og utforminger."
+  },
+  "144": {
+    "title": "Crickethjelm",
+    "description": "Beskyttende hodeutstyr for cricketspillere, særlig slagspillere og wicketkeepere. Beskytter mot raske kast og høye sprettballer."
+  },
+  "145": {
+    "title": "Cricketmål",
+    "description": "Et sett med tre stolper og to små tverrpinner som danner et cricketmål. Slagspillerne beskytter målet mens de prøver å score løp."
+  },
+  "146": {
+    "title": "Fjærball til badminton",
+    "description": "En badmintonball med naturlige fjær, utviklet for hurtig spill med stabilitet og presisjon under kamper."
+  },
+  "147": {
+    "title": "Fotball",
+    "description": "En standard ball til fotball, utviklet for spark og pasninger under spillet."
+  },
+  "148": {
+    "title": "Golfball",
+    "description": "En liten ball med fordypninger i overflaten som gir aerodynamisk løft og lengde når den slås med en golfkølle."
+  },
+  "149": {
+    "title": "Jernkølle til golf",
+    "description": "En golfkølle med massivt metallhode til innspill, korte slag og andre golfteknikker."
+  },
+  "150": {
+    "title": "Baseballkølle i metall",
+    "description": "En slitesterk og lett kølle av metallegeringer, brukt i baseballkamper og slagtrening."
+  }
+}

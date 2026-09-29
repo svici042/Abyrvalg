@@ -1,0 +1,30 @@
+.dialog {
+  width: min(34rem, calc(100% - 2rem));
+  max-height: calc(100svh - 2rem);
+  overflow: auto;
+  padding: 1.25rem;
+  border: 2px solid var(--control-border);
+  border-radius: 12px;
+  color: var(--text);
+  background: var(--surface);
+}
+.dialog::backdrop {
+  background: var(--backdrop);
+}
+.heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.heading h2 {
+  overflow-wrap: anywhere;
+  font-size: 1.4rem;
+}
+
+.dialog [role='alert'] {
+  color: var(--error);
+  background: var(--error-bg);
+  padding: 0.75rem;
+  border-left: 3px solid var(--error);
+}

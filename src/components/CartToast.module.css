@@ -1,0 +1,17 @@
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: min(25rem, calc(100% - 2rem));
+  z-index: 20;
+  padding: 1rem;
+  background: var(--success-bg);
+  color: var(--text);
+  border: 2px solid var(--success);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+.toast a {
+  display: inline-block;
+  padding: 0.75rem;
+}

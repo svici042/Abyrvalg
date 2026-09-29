@@ -1,0 +1,53 @@
+# Local development and package manager logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies, production builds and local caches
+node_modules/
+dist/
+dist-ssr/
+.vite/
+.cache/
+.npm/
+*.tsbuildinfo
+
+# Test results and coverage reports
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
+coverage/
+.nyc_output/
+
+# Local environment variables; retain secret-free templates
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+*.local
+
+# Local Netlify state; keep netlify.toml in Git
+.netlify/
+
+# Editor settings and temporary files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# Operating system metadata
+Thumbs.db
+Desktop.ini
+._*

@@ -1,0 +1,16 @@
+.field {
+  margin: 1rem 0;
+}
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.controls input {
+  width: 5rem;
+  min-width: 0;
+}
+.field p {
+  color: var(--error);
+  margin: 0.5rem 0;
+}

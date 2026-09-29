@@ -1,0 +1,77 @@
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 1rem;
+  color: var(--muted);
+  margin: 10px 0 30px;
+}
+.product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.details {
+  padding-top: 20px;
+}
+.category {
+  color: var(--link);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1rem;
+}
+.details h1 {
+  font-size: clamp(1.75rem, 3vw, 2.625rem);
+  line-height: 1.15;
+  letter-spacing: -1.3px;
+  font-weight: 500;
+}
+.rating {
+  font-size: 1rem;
+  color: var(--link);
+}
+.rating span {
+  color: var(--muted);
+  margin-left: 12px;
+}
+.price {
+  font-size: 1.6875rem;
+  font-weight: 600;
+  margin: 26px 0;
+}
+.description {
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+.details dl {
+  border-top: 1px solid var(--separator);
+  margin-top: 25px;
+}
+.details dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--separator);
+  font-size: 1rem;
+}
+.details dt {
+  color: var(--muted);
+}
+.details dd {
+  margin: 0;
+}
+.note {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 20px;
+}
+@media (max-width: 750px) {
+  .product {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

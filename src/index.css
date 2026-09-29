@@ -1,0 +1,285 @@
+:root {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 100%;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: light;
+  /* Keep decorative separators separate from meaningful control boundaries. */
+  --background: #faf7f2;
+  --surface: #ffffff;
+  --soft: #f1f2eb;
+  --text: #2d2c2a;
+  --muted: #62645e;
+  --separator: #d3d7ce;
+  --input-border: #74796e;
+  --control-border: #74796e;
+  --placeholder: #62645e;
+  --link: #3d5842;
+  --action: #49634d;
+  --action-hover: #3d5441;
+  --action-text: #ffffff;
+  --secondary: #ffffff;
+  --secondary-hover: #e7ebe2;
+  --secondary-text: #2d2c2a;
+  --focus: #375b42;
+  --selected: #49634d;
+  --selected-text: #ffffff;
+  --selected-indicator: #375b42;
+  --decoration: #8a9a86;
+  --brand-detail: #ff6500;
+  --hero: #f1f2eb;
+  --art: #e5e9e0;
+  --banner: #f1f2eb;
+  --banner-text: #2d2c2a;
+  --error: #a02e34;
+  --error-bg: #fceef0;
+  --success: #315f3d;
+  --success-bg: #edf3eb;
+  --warning: #f8f0d7;
+  --warning-text: #645019;
+  --disabled-bg: #e8ebe4;
+  --disabled-text: #62645e;
+  --disabled-border: #91978b;
+  --image-bg: #f1f2ef;
+  --image-text: #62645e;
+  --backdrop: #10161099;
+  --shadow: 0 4px 20px #14201926;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background: #121212;
+  --surface: #1f2937;
+  --soft: #27313d;
+  --text: #f3f4f1;
+  --muted: #b8c2ca;
+  --separator: #46505b;
+  --input-border: #899b9f;
+  --control-border: #899b9f;
+  --placeholder: #b8c2ca;
+  --link: #bdd5c0;
+  --action: #a8c5ad;
+  --action-hover: #bdd5c0;
+  --action-text: #142019;
+  --secondary: #1f2937;
+  --secondary-hover: #34404d;
+  --secondary-text: #f3f4f1;
+  --focus: #c9e1c8;
+  --selected: #a8c5ad;
+  --selected-text: #142019;
+  --selected-indicator: #c9e1c8;
+  --decoration: #8a9a86;
+  --brand-detail: #ff6500;
+  --hero: #1f2937;
+  --art: #27313d;
+  --banner: #1f2937;
+  --banner-text: #f3f4f1;
+  --error: #ffb9bb;
+  --error-bg: #3c242a;
+  --success: #b1d4b7;
+  --success-bg: #24372c;
+  --warning: #373322;
+  --warning-text: #eee0ab;
+  --disabled-bg: #303a45;
+  --disabled-text: #b8c2ca;
+  --disabled-border: #78878a;
+  --image-bg: #e6e9e4;
+  --image-text: #50584e;
+  --backdrop: #080c10b3;
+  --shadow: 0 4px 20px #0006;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 0;
+}
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+button,
+input,
+select {
+  color: inherit;
+}
+a {
+  color: var(--link);
+}
+button,
+a,
+input,
+select {
+  outline-offset: 4px;
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+button {
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  padding: 10px 15px;
+  color: var(--secondary-text);
+  background: var(--secondary);
+}
+button:hover:not(:disabled) {
+  background: var(--secondary-hover);
+}
+input,
+select {
+  border: 1px solid var(--input-border);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 10px;
+  min-width: 0;
+}
+a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+::selection {
+  background: var(--selected);
+  color: var(--selected-text);
+}
+
+button,
+input:not([type='checkbox']),
+select {
+  min-height: 44px;
+}
+input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.75rem;
+}
+label {
+  line-height: 1.6;
+}
+button,
+a,
+p,
+h1,
+h2,
+h3 {
+  overflow-wrap: anywhere;
+}
+small {
+  font-size: 0.875rem;
+}
+select {
+  max-width: 100%;
+}
+summary {
+  cursor: pointer;
+  padding: 0.75rem 0;
+  min-height: 44px;
+}
+/* System preferences apply immediately, without stored display settings. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (prefers-contrast: more) {
+  :root {
+    --muted: #3f443c;
+    --input-border: #454d41;
+    --control-border: #454d41;
+    --separator: #74796e;
+  }
+  :root[data-theme='dark'] {
+    --muted: #e4ebe2;
+    --input-border: #d2dccf;
+    --control-border: #d2dccf;
+    --separator: #899b9f;
+  }
+  a {
+    text-decoration-thickness: 2px;
+  }
+}
+@media (forced-colors: active) {
+  button,
+  input,
+  select,
+  dialog {
+    border: 1px solid ButtonText;
+  }
+  :focus-visible {
+    outline: 3px solid Highlight;
+  }
+  a[aria-current],
+  button[aria-pressed='true'] {
+    outline: 2px solid Highlight;
+  }
+}
+
+/* Stronger selectors preserve disabled states against component button styles. */
+button:disabled[class],
+button:disabled[data-primary],
+button:disabled {
+  color: var(--disabled-text);
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+}
+input::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+input[aria-invalid='true'] {
+  border-color: var(--error);
+  border-width: 2px;
+}
+input[type='checkbox'] {
+  accent-color: var(--action);
+}
+a[aria-current='page'] {
+  text-decoration: underline;
+  text-underline-offset: 0.4rem;
+}
+button[data-primary] {
+  background: var(--action);
+  color: var(--action-text);
+  border-color: var(--action);
+}
+button[data-primary]:hover:not(:disabled) {
+  background: var(--action-hover);
+  border-color: var(--action-hover);
+}

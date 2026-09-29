@@ -1,0 +1,24 @@
+.state {
+  padding: 65px 24px;
+  text-align: center;
+  background: var(--soft);
+  border-radius: 12px;
+  margin: 20px 0;
+  overflow-wrap: anywhere;
+}
+.state h2 {
+  font-size: 1.5625rem;
+  font-weight: 500;
+  margin: 12px 0;
+}
+.state p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.symbol {
+  font-size: 2.625rem;
+  color: var(--link);
+}
+.state button {
+  margin-top: 10px;
+}

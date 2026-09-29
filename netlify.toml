@@ -1,0 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Serve the app for direct product and cart URLs while preserving the URL/query.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Production-only headers; browser tests inject the same policy into preview responses.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://cdn.dummyjson.com https://dummyjson.com; connect-src 'self' https://dummyjson.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"

@@ -1,0 +1,81 @@
+.filter {
+  min-width: 0;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+.title h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.list button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 1rem;
+  padding: 11px 12px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+}
+.list button[aria-pressed='true'] {
+  background: var(--selected);
+  color: var(--selected-text);
+  font-weight: 600;
+}
+.note {
+  border: 1px solid var(--separator);
+  border-radius: 8px;
+  padding: 23px 18px;
+  margin-top: 30px;
+}
+.note > span {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: var(--link);
+}
+.note strong {
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+.note p {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 8px 0 0;
+}
+.select,
+.mobileLabel {
+  display: none;
+}
+@media (max-width: 800px) {
+  .list,
+  .note,
+  .title {
+    display: none;
+  }
+  .select,
+  .mobileLabel {
+    display: block;
+    width: 100%;
+  }
+  .mobileLabel {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+}
+
+.list button[aria-pressed='true']:hover {
+  background: var(--selected);
+  color: var(--selected-text);
+}
