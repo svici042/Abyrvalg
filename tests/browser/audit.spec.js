@@ -312,7 +312,10 @@ test('English excludes dictionaries, Norwegian loads them once and failures reta
   )
   const requests = []
   page.on('request', (request) => {
-    if (/(nb|en)-\d+-\d+-[^/]+\.json/.test(request.url()))
+    if (
+      request.resourceType() === 'fetch' &&
+      /(nb|en)-\d+-\d+(?:-[^/?]+)?\.json/.test(request.url())
+    )
       requests.push(request.url())
   })
   await page.goto('/')
@@ -415,6 +418,10 @@ for (const width of [320, 375, 768, 1440]) {
 test('configured production headers allow real API, images and lazy translation modules', async ({
   page,
 }) => {
+  test.skip(
+    !process.env.PLAYWRIGHT_PREVIEW,
+    'This policy check requires the production preview server.',
+  )
   await page.unroute('https://dummyjson.com/**')
   const config = fs.readFileSync('netlify.toml', 'utf8')
   const policy = config.match(/Content-Security-Policy = "([^"]+)"/)[1]
