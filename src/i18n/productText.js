@@ -1,5 +1,6 @@
 // Translate presentation only; preserve stored cart and order data.
 export function productText(product, language, field = 'title', dictionaries) {
+  if (product.text?.[language]?.[field]) return product.text[language][field]
   const original = product[field] || ''
   if (language !== 'nb' || !dictionaries) return original
   const id = product.id ?? product.productId

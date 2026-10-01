@@ -117,7 +117,13 @@ test('checkout validates, prevents duplicates, snapshots NOK and administers sav
   await expect(
     page.getByRole('heading', { name: 'Your order is confirmed' }),
   ).toBeVisible()
-  await page.getByRole('link', { name: 'Demo orders' }).click()
+  await page
+    .getByRole('link', { name: 'Demo administration', exact: true })
+    .click()
+  await page
+    .getByRole('link', { name: 'Demo orders', exact: true })
+    .first()
+    .click()
   await page
     .getByRole('searchbox', { name: 'Search by order number or customer' })
     .fill('nobody')
@@ -126,9 +132,12 @@ test('checkout validates, prevents duplicates, snapshots NOK and administers sav
     .getByRole('searchbox', { name: 'Search by order number or customer' })
     .fill('Demo Customer')
   await page.getByRole('link', { name: 'Open order' }).click()
+  await expect(page).toHaveURL(/\/admin\/orders\/AB-/)
+  await expect(page.locator('[name="fulfilmentStatus"]')).toBeVisible()
   await page
     .getByRole('combobox', { name: 'Fulfilment status', exact: true })
     .selectOption('shipped')
+  await expect(page.getByText('Order updated.', { exact: true })).toBeVisible()
   await page.reload()
   await expect(
     page.getByRole('combobox', { name: 'Fulfilment status', exact: true }),
@@ -143,6 +152,8 @@ test('checkout validates, prevents duplicates, snapshots NOK and administers sav
     .getByRole('combobox', { name: 'Fulfilment status', exact: true })
     .selectOption('shipped')
   await page.getByRole('link', { name: 'Open order' }).click()
+  await expect(page).toHaveURL(/\/admin\/orders\/AB-/)
+  await expect(page.locator('[name="fulfilmentStatus"]')).toBeVisible()
   await page.getByRole('button', { name: 'Delete order', exact: true }).click()
   await page.getByRole('button', { name: 'Cancel', exact: true }).click()
   await expect(
@@ -274,13 +285,16 @@ test('checkout, confirmation and admin fit mobile and desktop in both languages/
 })
 
 for (const purchaseLanguage of ['NO', 'EN']) {
-  test(`admin transaction currency stays fixed for ${purchaseLanguage} purchases`, async ({
+  test(`admin currency switches without changing saved ${purchaseLanguage} purchases`, async ({
     page,
   }) => {
     await prepareCheckout(page)
     await page
       .getByRole('combobox', { name: /Choose language|Velg språk/ })
       .selectOption(purchaseLanguage === 'EN' ? 'en' : 'nb')
+    await page
+      .getByRole('combobox', { name: /Currency|Valuta/ })
+      .selectOption(purchaseLanguage === 'EN' ? 'USD' : 'NOK')
     await page
       .getByRole('button', {
         name: /Simuler betaling og bestill|Simulate payment and place order/,
@@ -301,13 +315,22 @@ for (const purchaseLanguage of ['NO', 'EN']) {
           route === '/admin/orders'
             ? page.getByRole('article')
             : page.getByRole('region', { name: /Summary|Oppsummering/ })
-        await expect(amount).toContainText('NOK')
-        await expect(amount).toContainText(
-          language === 'EN' ? '104.90' : '104,90',
-        )
+        for (const currency of ['USD', 'NOK', 'USD']) {
+          await page
+            .getByRole('combobox', { name: /Currency|Valuta/ })
+            .selectOption(currency)
+          await expect(amount).toContainText(currency)
+          const value = currency === 'USD' ? '9.99' : '104.90'
+          await expect(amount).toContainText(
+            language === 'EN' ? value : value.replace('.', ','),
+          )
+        }
       }
       await page.reload()
       await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+      await expect(
+        page.getByRole('combobox', { name: /Currency|Valuta/ }),
+      ).toHaveValue('USD')
     }
     expect(
       await page.evaluate(() => localStorage.getItem('abyrvalg-orders')),

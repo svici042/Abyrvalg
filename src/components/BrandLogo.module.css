@@ -21,3 +21,9 @@
     width: 130px;
   }
 }
+
+.brand {
+  display: block;
+  max-width: 190px;
+  overflow-wrap: anywhere;
+}

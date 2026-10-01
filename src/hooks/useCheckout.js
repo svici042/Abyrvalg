@@ -5,7 +5,7 @@ import { useOrders } from './useOrders'
 import { createOrder } from '../utils/orders'
 
 export function useCheckout() {
-  const { clearCart } = useCart()
+  const { clearCart, revalidate, ready } = useCart()
   const { addOrder } = useOrders()
   const navigate = useNavigate()
   const [processing, setProcessing] = useState(false)
@@ -23,6 +23,12 @@ export function useCheckout() {
   async function pay(customer, quote) {
     // The ref blocks duplicate clicks before React renders the disabled button.
     if (locked.current) return
+    if (!ready || !revalidate()) {
+      setError(
+        'Review the updated cart before checkout. Product data must finish loading.',
+      )
+      return
+    }
     locked.current = true
     setProcessing(true)
     setError('')
@@ -33,6 +39,7 @@ export function useCheckout() {
       setSubmittedQuote(order)
       await new Promise((resolve) => setTimeout(resolve, 700))
       if (!active.current) return
+      if (!revalidate()) throw Error('Cart changed')
       addOrder(order)
       clearCart()
       navigate(`/orders/${order.id}`, { replace: true })

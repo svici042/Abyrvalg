@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await mockApi(page)
 })
 
-test('server pagination, URL history, search, categories and empty results', async ({
+test('catalogue pagination, URL history, search, categories and empty results', async ({
   page,
 }) => {
   await page.goto('/')

@@ -1,3 +1,4 @@
+import { useStoreContent } from '../hooks/useStoreContent'
 import { useLanguage } from '../hooks/useLanguage'
 import { Link, NavLink } from 'react-router-dom'
 import { useCart } from '../hooks/useCart'
@@ -11,12 +12,17 @@ import styles from './Header.module.css'
 // Shared navigation exposes cart quantity, language and theme on every route.
 export default function Header() {
   const { t } = useLanguage()
+  const { storeText } = useStoreContent()
   const { totalQuantity } = useCart()
   const { theme, toggleTheme } = useTheme()
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <Link to="/" className={styles.logo} aria-label={t('Abyrvalg – home')}>
+        <Link
+          to="/"
+          className={styles.logo}
+          aria-label={t('{store} – home', { store: storeText('storeName') })}
+        >
           <BrandLogo decorative />
         </Link>
         <nav aria-label={t('Main navigation')} className={styles.navigation}>

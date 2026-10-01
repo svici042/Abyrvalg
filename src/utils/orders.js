@@ -88,6 +88,21 @@ export function validateOrders(value) {
         line.unitMinor * line.quantity !== line.totalMinor
       )
         throw new Error('Invalid order line')
+      if (
+        line.text &&
+        ['en', 'nb'].some((language) => {
+          const text = line.text[language]
+          return (
+            !text ||
+            typeof text.title !== 'string' ||
+            !text.title.trim() ||
+            text.title.length > 200 ||
+            typeof text.description !== 'string' ||
+            text.description.length > 10000
+          )
+        })
+      )
+        throw new Error('Invalid order text')
       productIds.add(line.productId)
     }
     if (

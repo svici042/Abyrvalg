@@ -1,19 +1,22 @@
 import { useLanguage } from '../hooks/useLanguage'
+import { useImageSource } from '../hooks/useImageSource'
 import { useState } from 'react'
 import styles from './ProductImage.module.css'
 
 // Replace missing or failed images with an accessible translated fallback.
 export default function ProductImage({ src, title, eager = false }) {
   const { t } = useLanguage()
-  const [failed, setFailed] = useState(false)
+  const imageSrc = useImageSource(src)
+  const [failed, setFailed] = useState('')
   return (
     <div className={styles.frame}>
-      {src && !failed ? (
+      {imageSrc && failed !== imageSrc ? (
         <img
-          src={src}
+          referrerPolicy="no-referrer"
+          src={imageSrc}
           alt={title}
           loading={eager ? 'eager' : 'lazy'}
-          onError={() => setFailed(true)}
+          onError={() => setFailed(imageSrc)}
         />
       ) : (
         <div

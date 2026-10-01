@@ -3,7 +3,7 @@ import { STATUS_LABELS } from '../utils/orders'
 import OrderSummary from './OrderSummary'
 import styles from './Orders.module.css'
 
-export default function OrderDetails({ order }) {
+export default function OrderDetails({ order, quote = order }) {
   const { t, language } = useLanguage()
   return (
     <div className={styles.columns}>
@@ -37,7 +37,7 @@ export default function OrderDetails({ order }) {
           )}
         </small>
       </section>
-      <OrderSummary quote={order} />
+      <OrderSummary quote={quote} />
     </div>
   )
 }

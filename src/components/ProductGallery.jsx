@@ -6,8 +6,9 @@ import styles from './ProductGallery.module.css'
 export default function ProductGallery({ product }) {
   const { t, productTitle } = useLanguage()
   // Remove missing and repeated URLs before building slides and thumbnail controls.
-  const images = [...new Set((product.images || []).filter(Boolean))]
-  if (!images.length && product.thumbnail) images.push(product.thumbnail)
+  const images = [
+    ...new Set([product.thumbnail, ...(product.images || [])].filter(Boolean)),
+  ]
   const [index, setIndex] = useState(0)
   const current = Math.min(index, Math.max(0, images.length - 1))
 

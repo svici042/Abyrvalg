@@ -1,3 +1,5 @@
+import { useAdmin } from '../hooks/useAdmin'
+import { applyOverride } from '../utils/admin'
 import LocalDataControls from './LocalDataControls'
 import { Link } from 'react-router-dom'
 import { useRecentProducts } from '../hooks/useRecentProducts'
@@ -9,7 +11,10 @@ export default function RecentlyViewed({ excludeId }) {
   const { items } = useRecentProducts()
   const { t, formatPrice, productTitle } = useLanguage()
   // Omit the current product without removing it from the saved viewing history.
-  const visible = items.filter((item) => item.id !== excludeId)
+  const { config } = useAdmin()
+  const visible = items
+    .map((item) => applyOverride(item, config))
+    .filter((item) => item.id !== excludeId && !item.hidden)
   return (
     <section className={styles.section} aria-label={t('Recently viewed')}>
       <h2>{t('Recently viewed')}</h2>

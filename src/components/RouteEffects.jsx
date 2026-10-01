@@ -1,3 +1,4 @@
+import { useStoreContent } from '../hooks/useStoreContent'
 import { useEffect, useRef } from 'react'
 import {
   ScrollRestoration,
@@ -6,6 +7,9 @@ import {
 } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 function pageTitle(path) {
+  if (path === '/admin') return 'Dashboard'
+  if (path === '/admin/products') return 'Products'
+  if (path === '/admin/content') return 'Store content'
   if (path === '/') return 'Explore'
   if (path === '/cart') return 'Your cart'
   if (path === '/checkout') return 'Demo checkout'
@@ -20,7 +24,8 @@ export default function RouteEffects() {
   const navigationType = useNavigationType()
   const previousRoute = useRef(null)
   const { t } = useLanguage()
-  const title = t(pageTitle(pathname)) + ' – Abyrvalg'
+  const { storeText } = useStoreContent()
+  const title = t(pageTitle(pathname)) + ' – ' + storeText('storeName')
   useEffect(() => {
     document.title = title
   }, [title])

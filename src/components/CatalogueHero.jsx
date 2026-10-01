@@ -1,23 +1,38 @@
+import { HERO_HEADING, HERO_TEXT } from '../config/storeContent'
+import { useStoreContent } from '../hooks/useStoreContent'
 import { useLanguage } from '../hooks/useLanguage'
 import styles from '../pages/CataloguePage.module.css'
 
 // Decorative artwork is hidden from assistive technology; the link targets the catalogue.
 export default function CatalogueHero() {
   const { t } = useLanguage()
+  const { content, storeText } = useStoreContent()
   return (
     <>
       <section className={styles.hero}>
         <div>
           <p className={styles.eyebrow}>{t('A LITTLE WORLD OF GOOD FINDS')}</p>
           <h1>
-            {t('Everyday life, with')}
-            <br />
-            {t('a little more')} <em>{t('possibility.')}</em>
+            {content.heroHeading ? (
+              storeText('heroHeading')
+            ) : (
+              <>
+                {t(HERO_HEADING[0])}
+                <br />
+                {t(HERO_HEADING[1])} <em>{t(HERO_HEADING[2])}</em>
+              </>
+            )}
           </h1>
           <p>
-            {t('From what you need to what you never knew you wanted.')}
-            <br />
-            {t('Find your next favourite with us.')}
+            {content.heroText ? (
+              storeText('heroText')
+            ) : (
+              <>
+                {t(HERO_TEXT[0])}
+                <br />
+                {t(HERO_TEXT[1])}
+              </>
+            )}
           </p>
           <a href="#catalogue">
             {t('Explore the collection')} <span aria-hidden="true">↗</span>
@@ -32,7 +47,7 @@ export default function CatalogueHero() {
             {t('THE CURIOUS.')}
           </span>
           <span className={styles.artBottom}>
-            {t('abyrvalg / everyday finds')}
+            {storeText('storeName')} / {t('Everyday finds')}
           </span>
         </div>
       </section>

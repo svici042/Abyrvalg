@@ -5,21 +5,14 @@ test.beforeEach(async ({ page }) => {
   await mockApi(page)
 })
 
-test('sorting keeps filters, resets pagination and forwards API parameters', async ({
+test('sorting keeps filters and resets local catalogue pagination', async ({
   page,
 }) => {
   await page.goto('/?q=test&page=2')
-  const request = page.waitForRequest(
-    (request) =>
-      request.url().includes('sortBy=price') &&
-      request.url().includes('order=desc'),
-  )
   await page
     .getByRole('combobox', { name: 'Sorter etter' })
     .selectOption('price-desc')
-  const url = new URL((await request).url())
-  expect(url.searchParams.get('skip')).toBe('0')
-  expect(url.searchParams.get('q')).toBe('test')
+  await expect(page).toHaveURL(/q=test&sort=price-desc/)
   await expect(page.getByText('Side 1 av 2')).toBeVisible()
   await page.getByRole('button', { name: 'Skjønnhet', exact: true }).click()
   await expect(page).toHaveURL(/category=beauty&sort=price-desc/)

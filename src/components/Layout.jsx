@@ -1,3 +1,5 @@
+import { useAdmin } from '../hooks/useAdmin'
+import { useStoreContent } from '../hooks/useStoreContent'
 import RouteEffects from './RouteEffects'
 import { useLanguage } from '../hooks/useLanguage'
 import { useCurrency } from '../hooks/useCurrency'
@@ -11,6 +13,8 @@ import styles from './Layout.module.css'
 
 export default function Layout() {
   const { t, warning: languageWarning } = useLanguage()
+  const { storeText } = useStoreContent()
+  const administration = useAdmin()
   const cart = useCart()
   const theme = useTheme()
   const recent = useRecentProducts()
@@ -19,7 +23,9 @@ export default function Layout() {
   const warnings = [
     ...new Set(
       [
+        administration.warning,
         cart.warning,
+        cart.changeNotice,
         theme.warning,
         languageWarning,
         recent.warning,
@@ -37,8 +43,12 @@ export default function Layout() {
       >
         {t('Skip to content')}
       </a>
-      <div className={styles.announcement}>
-        {t('A little of everything. A good choice.')}
+      <div
+        className={styles.announcement}
+        role="region"
+        aria-label={t('Announcement text')}
+      >
+        {storeText('announcement')}
       </div>
       <Header />
       <main tabIndex={-1} id="main" className={styles.main}>
@@ -50,13 +60,14 @@ export default function Layout() {
         <Outlet />
       </main>
       <footer className={styles.footer}>
-        <Link to="/admin/orders">{t('Demo orders')}</Link>
+        <Link to="/admin">{t('Demo administration')}</Link>
         <div className={styles.footerBrand}>
           <BrandLogo compact />
-          <p>{t('Small finds. Big possibilities.')}</p>
+          <p>{storeText('footer')}</p>
         </div>
+        <p>{storeText('contact')}</p>
         <p className={styles.copyright}>
-          © {new Date().getFullYear()} Bim &amp; Bom
+          © {new Date().getFullYear()} {storeText('storeName')}
         </p>
       </footer>
     </>

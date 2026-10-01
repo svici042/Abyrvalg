@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { STATUS_LABELS } from '../utils/orders'
+import { orderDisplayQuote } from '../utils/money'
 import styles from './Orders.module.css'
 
 export default function OrderList({ orders }) {
-  const { t, language, formatAmount } = useLanguage()
+  const { t, language, currency, formatAmount } = useLanguage()
   return (
     <div className={styles.orderList}>
       {/* Preserve the filtered order sequence supplied by the administration page. */}
@@ -19,7 +20,9 @@ export default function OrderList({ orders }) {
             )}
           </p>
           <p>
-            <strong>{formatAmount(order.totalMinor, order.currency)}</strong>
+            <strong>
+              {formatAmount(orderDisplayQuote(order, currency).totalMinor)}
+            </strong>
           </p>
           <p>
             {t('Payment')}:{' '}

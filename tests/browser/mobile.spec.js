@@ -59,7 +59,13 @@ for (const width of [320, 360, 390, 430]) {
       page.getByRole('heading', { name: 'Your order is confirmed' }),
     ).toBeVisible()
     await checkLayout('confirmation')
-    await page.getByRole('link', { name: 'Demo orders' }).tap()
+    await page
+      .getByRole('link', { name: 'Demo administration', exact: true })
+      .tap()
+    await page
+      .getByRole('link', { name: 'Demo orders', exact: true })
+      .first()
+      .tap()
     await page.getByRole('link', { name: 'Open order' }).tap()
     await expect(page).toHaveURL(/\/admin\/orders\/AB-/)
     await page

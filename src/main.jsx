@@ -1,3 +1,4 @@
+import { AdminProvider } from './context/AdminProvider'
 import { CurrencyProvider } from './context/CurrencyProvider'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -18,19 +19,21 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <CartProvider>
-          <CurrencyProvider>
-            <LanguageProvider>
-              <OrderProvider>
-                <RecentProvider>
-                  <App />
-                </RecentProvider>
-              </OrderProvider>
-            </LanguageProvider>
-          </CurrencyProvider>
-        </CartProvider>
-      </ThemeProvider>
+      <AdminProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <CurrencyProvider>
+              <LanguageProvider>
+                <OrderProvider>
+                  <RecentProvider>
+                    <App />
+                  </RecentProvider>
+                </OrderProvider>
+              </LanguageProvider>
+            </CurrencyProvider>
+          </CartProvider>
+        </ThemeProvider>
+      </AdminProvider>
     </QueryClientProvider>
   </StrictMode>,
 )

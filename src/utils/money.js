@@ -20,6 +20,19 @@ export function priceInMinor(basePrice, rate) {
   return Math.round((basePrice * rate + Number.EPSILON) * 100)
 }
 
+export function orderDisplayQuote(order, selectedCurrency) {
+  // Preserve original rounding in the purchase currency; convert from saved base prices otherwise.
+  if (order.currency === selectedCurrency) return order
+  return calculateQuote(
+    order.lines.map((line) => ({
+      ...line,
+      id: line.productId,
+      price: line.basePrice,
+    })),
+    selectedCurrency,
+  )
+}
+
 export function calculateQuote(items, selectedCurrency) {
   const { currency, rate } = currencySettings(selectedCurrency)
   // Each line stores its base price and rounded transaction amounts for later display.
@@ -28,6 +41,7 @@ export function calculateQuote(items, selectedCurrency) {
     return {
       productId: item.id,
       title: item.title,
+      ...(item.text ? { text: structuredClone(item.text) } : {}),
       basePrice: item.price,
       quantity: item.quantity,
       unitMinor,

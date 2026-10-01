@@ -2,10 +2,13 @@ const products = Array.from({ length: 25 }, (_, index) => ({
   id: index + 1,
   title: `Produkt ${index + 1}`,
   price: 9.99,
-  category: 'beauty',
+  category: index < 2 ? 'beauty' : 'furniture',
   stock: 3,
   rating: 4.5,
-  description: 'Et fint produkt til hverdagen.',
+  description:
+    index < 13
+      ? 'Et fint produkt til hverdagen. test'
+      : 'Et fint produkt til hverdagen.',
   thumbnail: '',
   images: [],
 }))

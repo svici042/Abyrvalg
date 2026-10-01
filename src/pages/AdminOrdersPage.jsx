@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { useOrders } from '../hooks/useOrders'
 import { ORDER_STATUSES, STATUS_LABELS } from '../utils/orders'
+import { orderDisplayQuote } from '../utils/money'
 import OrderList from '../components/OrderList'
 import OrderDetails from '../components/OrderDetails'
 import OrderAdminActions from '../components/OrderAdminActions'
@@ -14,7 +15,7 @@ import styles from '../components/Orders.module.css'
 export default function AdminOrdersPage() {
   const searchId = useId()
   const statusId = useId()
-  const { t } = useLanguage()
+  const { t, currency } = useLanguage()
   const { orders } = useOrders()
   const { id } = useParams()
   const [search, setSearch] = useState('')
@@ -49,7 +50,10 @@ export default function AdminOrdersPage() {
           </Link>
           {selected ? (
             <>
-              <OrderDetails order={selected} />
+              <OrderDetails
+                order={selected}
+                quote={orderDisplayQuote(selected, currency)}
+              />
               <OrderAdminActions key={selected.id} order={selected} />
             </>
           ) : (
