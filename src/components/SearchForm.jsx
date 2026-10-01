@@ -1,9 +1,11 @@
+import { useId } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useSearchDraft } from '../hooks/useSearchDraft'
 import styles from './Header.module.css'
 
 // Delegate draft text and explicit submission to the search hook.
 export default function SearchForm() {
+  const id = useId()
   const { t } = useLanguage()
   const { search, change, submit } = useSearchDraft()
 
@@ -16,11 +18,12 @@ export default function SearchForm() {
         submit()
       }}
     >
-      <label htmlFor="product-search" className={styles.hidden}>
+      <label htmlFor={id} className={styles.hidden}>
         {t('Search products')}
       </label>
       <input
-        id="product-search"
+        id={id}
+        name="search"
         type="search"
         placeholder={t('What are you looking for?')}
         value={search}

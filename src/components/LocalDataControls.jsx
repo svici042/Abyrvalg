@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useRecentProducts } from '../hooks/useRecentProducts'
 import { useOrders } from '../hooks/useOrders'
 import { useLanguage } from '../hooks/useLanguage'
@@ -6,6 +6,7 @@ import Modal from './Modal'
 
 // Contextual controls share confirmation and keep failures inside the active dialog.
 export default function LocalDataControls({ kind = 'history' }) {
+  const checkboxId = useId()
   const { enabled, enable, clear } = useRecentProducts()
   const { deleteAll } = useOrders()
   const { t } = useLanguage()
@@ -39,8 +40,10 @@ export default function LocalDataControls({ kind = 'history' }) {
               'Recently viewed history is optional. Enable it to remember up to six products in this browser. Disabling deletes the history.',
             )}
           </p>
-          <label>
+          <label htmlFor={checkboxId}>
             <input
+              id={checkboxId}
+              name="rememberRecentlyViewed"
               type="checkbox"
               checked={enabled}
               onChange={(event) => {

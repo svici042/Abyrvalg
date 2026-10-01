@@ -1,5 +1,5 @@
 import LocalDataControls from '../components/LocalDataControls'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { useOrders } from '../hooks/useOrders'
@@ -12,6 +12,8 @@ import RequestState from '../components/RequestState'
 import styles from '../components/Orders.module.css'
 
 export default function AdminOrdersPage() {
+  const searchId = useId()
+  const statusId = useId()
   const { t } = useLanguage()
   const { orders } = useOrders()
   const { id } = useParams()
@@ -61,19 +63,21 @@ export default function AdminOrdersPage() {
       ) : (
         <>
           <div className={styles.filters}>
-            <label htmlFor="order-search">
+            <label htmlFor={searchId}>
               {t('Search by order number or customer')}
               <input
-                id="order-search"
+                id={searchId}
+                name="orderSearch"
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
               />
             </label>
-            <label htmlFor="status-filter">
+            <label htmlFor={statusId}>
               {t('Fulfilment status')}
               <select
-                id="status-filter"
+                id={statusId}
+                name="status"
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
               >

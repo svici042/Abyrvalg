@@ -59,6 +59,7 @@ export default function QuantityInput({
         </button>
         <input
           id={id}
+          name="quantity"
           type="number"
           inputMode="numeric"
           min="1"

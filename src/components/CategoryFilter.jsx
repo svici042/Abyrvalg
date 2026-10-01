@@ -1,8 +1,10 @@
+import { useId } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useCategories } from '../hooks/useProducts'
 import styles from './CategoryFilter.module.css'
 
 export default function CategoryFilter({ category, onChange }) {
+  const id = useId()
   const { t } = useLanguage()
   const query = useCategories()
   return (
@@ -18,11 +20,12 @@ export default function CategoryFilter({ category, onChange }) {
           <button onClick={() => query.refetch()}>{t('Try again')}</button>
         </div>
       )}
-      <label className={styles.mobileLabel} htmlFor="category-select">
+      <label className={styles.mobileLabel} htmlFor={id}>
         {t('Choose a category')}
       </label>
       <select
-        id="category-select"
+        id={id}
+        name="category"
         className={styles.select}
         value={category}
         onChange={(event) => onChange(event.target.value)}

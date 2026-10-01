@@ -62,7 +62,9 @@ for (const width of [320, 360, 390, 430]) {
     await page.getByRole('link', { name: 'Demo orders' }).tap()
     await page.getByRole('link', { name: 'Open order' }).tap()
     await expect(page).toHaveURL(/\/admin\/orders\/AB-/)
-    await page.locator('#order-status').selectOption('shipped')
+    await page
+      .getByRole('combobox', { name: 'Fulfilment status', exact: true })
+      .selectOption('shipped')
     await expect(
       page.getByText('Order updated.', { exact: true }),
     ).toBeVisible()

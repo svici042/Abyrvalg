@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { useOrders } from '../hooks/useOrders'
@@ -6,6 +6,7 @@ import { ORDER_STATUSES, STATUS_LABELS } from '../utils/orders'
 import styles from './Orders.module.css'
 
 export default function OrderAdminActions({ order }) {
+  const statusId = useId()
   const { t } = useLanguage()
   const { updateStatus, deleteOrder } = useOrders()
   const navigate = useNavigate()
@@ -34,9 +35,10 @@ export default function OrderAdminActions({ order }) {
 
   return (
     <section className={styles.panel}>
-      <label htmlFor="order-status">{t('Fulfilment status')}</label>
+      <label htmlFor={statusId}>{t('Fulfilment status')}</label>
       <select
-        id="order-status"
+        id={statusId}
+        name="fulfilmentStatus"
         value={order.status}
         onChange={(event) => changeStatus(event.target.value)}
       >
