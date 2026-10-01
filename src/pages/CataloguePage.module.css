@@ -57,23 +57,76 @@
   text-decoration: underline;
 }
 .orbit {
-  width: 290px;
-  height: 290px;
+  width: min(290px, 76%);
+  aspect-ratio: 1;
   border: 1px solid var(--brand-detail);
   border-radius: 50%;
-  opacity: 0.25;
+  opacity: 0.35;
   position: absolute;
-  transform: rotate(0deg) scaleX(1.35);
-  animation: none;
+  transform-origin: center;
+  animation: orbit-rotation 60s linear infinite;
 }
 
 .star {
   font-size: 17.8125rem;
   line-height: 1;
-  color: var(--decoration);
-  transform: rotate(-15deg);
+  display: block;
+  background: linear-gradient(
+    145deg,
+    #f4f7e9 2%,
+    #d1dfbd 20%,
+    #a6bd91 43%,
+    #718d6c 68%,
+    #496248 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow:
+    1px 1px 0 #526b50,
+    2px 2px 0 #465e47,
+    3px 3px 0 #3b5140,
+    4px 5px 0 #314538,
+    0 10px 10px #14201955;
+  transform-origin: center;
   font-family: Georgia, serif;
-  animation: none;
+  animation: star-rotation 40s linear infinite;
+}
+
+:global(:root[data-theme='dark']) .star {
+  background-image: linear-gradient(
+    145deg,
+    #ffffff 2%,
+    #e0f0d0 20%,
+    #b8d9a8 43%,
+    #85b589 68%,
+    #5e8d70 100%
+  );
+  text-shadow:
+    1px 1px 0 #58735a,
+    2px 2px 0 #49634e,
+    3px 3px 0 #3b5344,
+    4px 5px 0 #30473b,
+    0 10px 10px #0008;
+}
+
+@keyframes star-rotation {
+  from {
+    transform: rotate(-15deg);
+  }
+  to {
+    transform: rotate(345deg);
+  }
+}
+
+@keyframes orbit-rotation {
+  from {
+    transform: rotate(0deg) scaleX(1.35);
+  }
+  to {
+    transform: rotate(-360deg) scaleX(1.35);
+  }
 }
 
 .artLabel {
@@ -176,6 +229,9 @@
   .star {
     font-size: 13.75rem;
   }
+  .orbit {
+    width: min(240px, 72%);
+  }
   .artLabel {
     font-size: 1rem;
     right: 15px;
@@ -195,6 +251,16 @@
     font-size: 2.3125rem;
   }
   .art {
+    display: grid;
+    min-height: 220px;
+  }
+  .star {
+    font-size: clamp(8.5rem, 42vw, 10.5rem);
+  }
+  .orbit {
+    width: min(205px, 68%);
+  }
+  .artLabel {
     display: none;
   }
   .intro {
