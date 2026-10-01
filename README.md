@@ -2,83 +2,119 @@
 
 ## 1. Appbeskrivelse
 
-Abyrvalg er en responsiv nettbutikkdemo laget som skoleoppgave. DummyJSON er den opprinnelige produktkilden. Normalt bruker butikken API-paginering med `limit=12` og `skip`, samt API-søk, kategorifiltrering og sortering. Ved lagrede produktendringer brukes en eksplisitt lokal demomodus: hele katalogen lastes i en separat hurtigbuffer, lokale endringer brukes først, deretter filtrering, sortering og paginering. Dette gir riktige resultater også når en vare flyttes mellom sider eller kategorier. Innholdsendringer alene aktiverer ikke denne modusen. Du kan legge varer i handlekurven og gjennomføre en lokal demoordre. Det skjer ingen ekte betaling, lagerreservasjon eller levering. Bruk bare oppdiktede kundeopplysninger. Kurv, innstillinger og ordre lagres lokalt i nettleseren.
+Abyrvalg er en responsiv nettbutikkdemo laget som skoleoppgave, med DummyJSON som produktkilde. Du kan søke, filtrere og sortere produkter, bruke handlekurven og gjennomføre en lokal demoordre. Ingen ekte betaling, lagerreservasjon eller levering skjer. Bruk bare oppdiktede kundeopplysninger.
 
-Grensesnittet finnes på norsk og engelsk, og valuta kan velges separat (NOK eller USD). Tema kan byttes mellom lyst og mørkt. Produktdata og bilder hentes fra eksterne tjenester, så prosjektet trenger nettverk for produktvisning.
+Språk (norsk/engelsk), valuta (NOK/USD) og lyst/mørkt tema velges separat. Kurv, preferanser, nylig sette produkter, demoordre og administrasjonsendringer lagres i nettleseren. Prisene lagres i USD; NOK bruker demokursen 10,5 NOK per USD.
 
-Demo: [Abyrvalg på GitHub Pages](https://svici042.github.io/Abyrvalg/) · Kildekode: [GitHub-repositoriet](https://github.com/svici042/Abyrvalg).
+Demo: [GitHub Pages](https://svici042.github.io/Abyrvalg/) · Kildekode: [GitHub](https://github.com/svici042/Abyrvalg).
+
+Beskrivelsen gjelder den lokale implementasjonen. Demoen er tidligere publisert, men siste administrasjon og fanesynkronisering er ikke verifisert på den publiserte versjonen. Tidligere deploykontroller gjelder en tidligere versjon.
+
+### Sider og administrasjon
+
+Rutene er relative til nettstedets baseadresse (`/Abyrvalg/` på GitHub Pages).
+
+| Rute                                 | Funksjon                                                                           |
+| ------------------------------------ | ---------------------------------------------------------------------------------- |
+| `/`                                  | Katalog med søk, kategori, sortering og paginering                                 |
+| `/products/:id`                      | Produktdetaljer og bildegalleri                                                    |
+| `/cart`, `/checkout`, `/orders/:id`  | Kurv, demokasse og ordrebekreftelse                                                |
+| `/admin`                             | Oversikt, eksport/import, nullstilling og bildeopprydding                          |
+| `/admin/products`                    | Søk og filtrering i hele katalogen; redigering av eksisterende produkter           |
+| `/admin/content`                     | Butikknavn, logo, hovedbanner, kunngjøring, bunntekst og fiktiv kontaktinformasjon |
+| `/admin/orders`, `/admin/orders/:id` | Lokale ordre, detaljer, statusendringer og sletting                                |
+
+Produkter kan få norsk/engelsk tekst, pris, kategori, merke, demolager, synlighet og bilder. Bilder kan flyttes, fjernes og velges som hovedbilde. Skjuling er reversibel; enkeltprodukter kan gjenopprettes til API-data. Butikkinnhold vises som ren tekst; uendrede bannerfelt beholder standardens linjeskift og utheving.
+
+Skjemaene bruker Lagre/Avbryt og varsler ved navigasjon med ulagrede endringer. «Se i butikken» viser lagret versjon. Nullstilling krever bekreftelse og fjerner bare administrasjonsendringer, ikke kurv, preferanser eller ordre. Ordresidene har egne slettekontroller.
+
+### API-paginering og lokal demomodus
+
+Normalt brukes API-søk, kategorifiltrering og sortering med `limit=12` og `skip`. Søket bruker API-ets originaltekst. Når minst én produktoverstyring er lagret, lastes hele katalogen i en separat hurtigbuffer: lokale endringer brukes før skjuling, søk, filtrering, sortering og paginering. Søket inkluderer da lokale tekstendringer i valgt språk. Innholdsendringer alene aktiverer ikke denne modusen.
+
+Administrasjonen laster hele katalogen. Produktdetaljer og kurv henter nødvendige enkeltprodukter. Nylig sett bruker lagrede øyeblikksbilder med gjeldende overstyringer. Kurven oppdaterer pris, begrenser antall til lager og fjerner skjulte eller utilgjengelige varer med varsel. Kassen kontrollerer kurven før og etter simulert behandling; produktendringer fra andre faner under behandlingen trenger ytterligere testing. Lagrede ordre beholder historiske pris- og tekstøyeblikksbilder.
 
 ## 2. Teknologivalg og grunner
 
-- React og Vite gir et komponentbasert grensesnitt og rask lokal utvikling.
+- React og Vite gir komponentbasert grensesnitt og rask lokal utvikling.
 - React Router håndterer sider, URL-filtre og nettleserhistorikk.
 - Axios og TanStack Query håndterer API-forespørsler og hurtigbuffer.
-- CSS Modules holder stilene lokale for komponentene, mens CSS-variabler støtter temaene.
+- CSS Modules og CSS-variabler organiserer stiler og temaer.
+- localStorage lagrer tekst og tilstand; IndexedDB lagrer opplastede bildebytes.
 - Node.js, Playwright og axe brukes til enhets-, nettleser- og automatiserte tilgjengelighetstester.
 
 ## 3. Lokal oppstart
 
-Bruk en Node.js-versjon som støttes av Vite (22.12 eller nyere, eller 24 eller nyere).
+Bruk en Node.js-versjon som støttes av prosjektets Vite-versjon:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Åpne adressen som vises i terminalen. Ingen API-nøkler kreves; DummyJSON og produktbilder krever nettverk.
+Åpne adressen i terminalen. Ingen API-nøkler kreves; DummyJSON og eksterne bilder krever nettverk. Administrasjonslagring, opplasting, eksport/import og trygg opprydding krever **HTTPS eller localhost og Web Locks-støtte**. Butikken kan fortsatt leses uten Web Locks.
+
+Kommandoer fra `package.json`:
 
 ```sh
-npm run format
 npm run lint
 npm test
 npm run build
+npm run preview
 npx playwright install chromium
 npm run test:browser
 ```
 
-For nettlesertester mot et lokalt produksjonsbygg: Kjør `$env:PLAYWRIGHT_PREVIEW='1'; npm run test:browser` i PowerShell. Live-testen bruker DummyJSON; de andre nettlesertestene bruker isolerte testdata.
+`npm run format` formaterer kildekode, tester og dokumenter og skriver endringene til disk. For nettlesertester mot produksjonsbygg, bygg først og kjør deretter i PowerShell:
+
+```powershell
+$env:PLAYWRIGHT_PREVIEW='1'
+npm run test:browser
+```
+
+Fokusert administrasjonstest: `npx playwright test tests/browser/admin.spec.js tests/browser/admin-safety.spec.js`. Playwright bruker Chromium. Live-testene bruker DummyJSON; øvrige nettlesertester bruker isolerte testdata. Mobilvisninger i tester erstatter ikke fysisk telefon.
 
 ## 4. Mappestruktur
 
-- `src/api/` – forespørsler om produkter og kategorier.
-- `src/components/` – felles grensesnittkomponenter.
-- `src/pages/` – katalog, produktdetaljer, handlekurv, kasse og ordre.
-- `src/context/`, `src/hooks/`, `src/utils/` – tilstand, preferanser og beregninger.
-- `src/i18n/` – grensesnitttekster og produktoversettelser.
-- `src/assets/` og `Media/` – grafiske ressurser.
-- `tests/` – enhets- og nettlesertester.
+- `src/api/` – produkt- og kategoriforespørsler.
+- `src/components/`, `src/pages/` – butikk- og administrasjonsgrensesnitt.
+- `src/context/`, `src/hooks/`, `src/utils/` – tilstand, lagring, validering og beregninger.
+- `src/config/`, `src/i18n/` – butikkstandarder, valuta og oversettelser.
+- `src/assets/`, `Media/` – grafiske ressurser.
+- `tests/` – enhets- og nettlesertester, inkludert lokal Pages-rutegjenoppretting.
 
 ## 5. Begrensninger og neste steg
 
-Kurv, innstillinger og demoordre finnes bare i samme nettleser. Det finnes ingen brukerautentisering, sikker server, enhetssynkronisering eller ekte betaling. Lagerdata er kun til demonstrasjon. Katalogforespørsler går til DummyJSON, og produktbilder lastes fra eksterne servere. Normalsøk bruker API-ets originaltekst. I lokal demomodus søker butikken også i lokale tekstendringer i valgt språk. Administrasjonen laster hele katalogen separat; produktdetaljer og handlekurv henter bare nødvendige enkeltprodukter. Nylig sett bruker lagrede øyeblikksbilder med gjeldende lokale endringer. Nye produkter fra katalogen trenger oversettelsesdata.
+### Lokal lagring og fanekonflikter
 
-Prosjektet er en demo, ikke en butikk for ekte salg. Kommersiell bruk krever sikker backend, selgeropplysninger og vilkår for salg, levering, retur og personvern. Automatiske tester dokumenterer ikke full WCAG-samsvar. GitHub Pages-demoen er publisert og støtter direkte produktruter. Netlify-innstillingene i `netlify.toml` gjelder ikke på GitHub Pages; de faktiske Pages-svarene mangler egendefinerte sikkerhetsheadere.
+Administrasjonen har ingen sikker autentisering. Endringer gjelder bare samme nettleserprofil og origin, og endrer verken DummyJSON eller butikken for andre besøkende. Det finnes ingen sikker backend eller enhetssynkronisering. Nettleseren kan slette lokale data; ta sikkerhetskopi før viktig demoarbeid.
 
-## 6. Demoadministrasjon
+Administrasjonen bruker et versjonert skjema under `abyrvalg-admin` i localStorage. `storage`-hendelser synkroniserer denne konfigurasjonen mellom faner; dette er ikke generell fanesynkronisering av kurv, preferanser og ordre. Lagring, import, nullstilling og bildeopprydding bruker samme Web Locks-lås. Nye revisjoner og kontroll av lagret verdi avviser utdaterte lagringer også før en lagringshendelse er mottatt.
 
-- `/admin` – oversikt, eksport/import og nullstilling.
-- `/admin/products` – søk og filtrer hele katalogen; rediger norsk/engelsk tekst, pris, kategori, merke, demolager, synlighet og bilder. Skjuling er reversibel, og hvert produkt kan gjenopprettes.
-- `/admin/content` – butikknavn, logo, hovedbanner, kunngjøring, bunntekst og fiktiv kontaktinformasjon. Lagrede felt vises i butikken som ren tekst.
-- `/admin/orders` og `/admin/orders/:id` – eksisterende administrasjon av lokale demoordrer, integrert i administrasjonsområdet.
+Ulagrede utkast overskrives ikke automatisk. Ved konflikt kan du laste inn lagrede data eller bekrefte «Behold utkastet mitt». Neste lagring erstatter da valgt produkt eller butikkinnhold i nyeste konfigurasjon, mens andre deler beholdes. En ny ekstern endring gir en ny konflikt. Lagringsfeil rapporteres og regnes ikke som vellykket lagring.
 
-Administrasjonen har ingen sikker autentisering. Endringer gjelder **bare denne nettleseren på samme origin**, og oppdaterer verken DummyJSON eller nettstedet for andre besøkende. Språk, valuta og tema deles med butikken. Skjemaene har eksplisitt Lagre/Avbryt og varsler ved navigasjon med ulagrede endringer. «Se i butikken» viser den lagrede versjonen.
+### Bilder og personvern
 
-Tekst og konfigurasjon lagres under `abyrvalg-admin` i localStorage med et versjonert skjema. Opplastede JPG/PNG/WebP/GIF-bilder (maksimalt 5 MB per bilde, 30 bilder per produkt) lagres som Blob i IndexedDB (`abyrvalg-images`); localStorage inneholder bare bildereferanser. SVG og andre filtyper avvises. Filhoder og dimensjoner kontrolleres før nettleseren dekoder bildene: maksimalt 4096 piksler per side og 16 millioner piksler. Godkjente stillbilder tegnes på canvas og kodes på nytt uten originalmetadata (JPEG som JPEG, andre som PNG). Den nye filen må også være under 5 MB. Nye animerte GIF/PNG/WebP-opplastinger og importer avvises uttrykkelig, slik at animasjonen ikke stille blir ødelagt; eksisterende lagrede animasjoner beholdes og kan eksporteres, men kan ikke importeres gjennom stillbildebehandlingen. Nye bildeadresser og importerte adresser må bruke HTTPS. Eldre HTTP-referanser beholdes i dataene, men vises ikke; et varsel ber om migrering til HTTPS eller opplasting før lagring/import. Eksterne adresser krever fortsatt nettverk og kan slutte å virke; en tilgjengelig reservevisning vises når bilder mangler. Lagringsfeil rapporteres, og en mislykket konfigurasjonslagring regnes ikke som lagret.
+- Lokale stillbilder: JPG/JPEG, PNG, WebP og GIF. SVG og andre filtyper avvises.
+- Maksimalt 5 MB per bilde, 4096 piksler per side og 16 millioner piksler totalt. Produktgalleriet tillater opptil 30 bilder; logoen er ett bilde.
+- Filhoder og dimensjoner kontrolleres før dekoding. Canvas koder JPEG som JPEG og øvrige formater som PNG uten originalmetadata; resultatet må også være innenfor 5 MB.
+- Nye animerte GIF/PNG/WebP-opplastinger og importer avvises. Eksisterende lagrede animasjoner beholdes og kan eksporteres, men **kan ikke importeres igjen i dag**. En slik eksport er derfor ikke en fullstendig gjenopprettbar sikkerhetskopi.
+- Opplastinger lagres som Blob i IndexedDB (`abyrvalg-images`), med referanser i konfigurasjonen. Manglende bilder får reservevisning.
 
-Prisene lagres alltid i USD. NOK-inndata konverteres med den eksisterende faste demokursen på 10,5 NOK per USD. Valutabytte alene endrer ikke den lagrede prisen. Handlekurven bruker gjeldende produktpriser, begrenser antall til lagerbeholdningen og fjerner skjulte eller utsolgte produkter med et synlig varsel. Kassen kontrollerer kurven igjen før ordreopprettelse. Allerede lagrede ordrer beholder historiske pris- og tekstøyeblikksbilder.
+Nye og importerte eksterne bildeadresser må bruke HTTPS. Eldre HTTP-referanser beholdes i dataene, men blokkeres fra visning og må erstattes før lagring/import. Eksterne bilder behandles ikke med canvas og har ikke de lokale filgrensene eller metadatafjerningen. De krever nettverk og kan slutte å virke.
 
-JSON-eksport inkluderer opplastede bildebytes, men ikke handlekurv, preferanser, ordrehistorikk eller kundeopplysninger. Import (maksimalt 50 MB) validerer skjema, verdier, språk og nødvendige bilder, og gir opplastede bilder nye ID-er før konfigurasjonen erstattes. Import og nullstilling krever bekreftelse. Nullstilling berører bare administrasjonsdata; den sletter ikke kurv, preferanser eller ordre. Kurvlinjer som fortsatt finnes, følger de gjenopprettede produktprisene og lagergrensene. Ubrukte opplastinger ryddes etter bildeendringer, avbrutte redigeringer, gjenoppretting, nullstilling og mislykkede importer. Bilder brukt av lagret konfigurasjon, eksport eller aktive utkast i andre faner er beskyttet. En mislykket import eller konfigurasjonslagring ruller tilbake nyimporterte bilder. «Rydd ubrukte opplastinger» gir eksplisitt opprydding med resultatmelding. Etter en lukket fane kan opplastinger ryddes ved neste redigering eller eksplisitte opprydding. Opprydding stoppes ved uleselige lagringsdata. Nettleseren kan også slette lokale data; eksporter en sikkerhetskopi før viktig demoarbeid.
+Før import viser bekreftelsen eksterne bildeverter før bildene lastes. Bildeelementer bruker `referrerPolicy="no-referrer"`, men vertene mottar fortsatt bildeforespørsler og IP-adresse. HTTPS skjuler ikke dette for bildeverten. Demoen beskytter ikke mot ondsinnet kode eller manuell endring av nettleserlagring.
 
-Fokuserte administrasjonstester: `npm test` og `npx playwright test tests/browser/admin.spec.js`. Nettlesertestene dekker lagring/gjenoppretting, oppdatering etter refresh, bildehåndtering og eksport/import, kurv/kasse, tastatur, mobilvisning og automatisert tilgjengelighet i begge språk og temaer.
+### Sikkerhetskopi og opprydding
 
-### Faner, konflikter og bildepersonvern
+JSON-eksport inkluderer administrasjonskonfigurasjon og opplastede bildebytes, ikke kurv, preferanser, ordrehistorikk eller kundeopplysninger. Eksterne bilder eksporteres som adresser. Eksport beregner UTF-8 JSON-overhead, MIME-prefikser og polstret Base64-størrelse før første Base64-streng opprettes, og håndhever en løpende 50 MB-grense med fremdriftsmelding. Manglende opplastinger stopper eksporten.
 
-Lagring, import, nullstilling og bildesletting bruker samme Web Locks-lås. `storage`-hendelser oppdaterer lagrede innstillinger i andre faner. Hver lagring får en ny revisjon, og en utdatert lagring avvises også hvis lagringshendelsen ikke har kommet frem. Ulagrede utkast overskrives aldri automatisk: velg «Last inn lagrede data» eller «Behold utkastet mitt». Det siste krever bekreftelse og lar neste lagring erstatte den aktuelle delen (butikkinnhold eller valgt produkt), mens andre deler beholdes. Ved en ny endring oppstår en ny konflikt. Støtte for Web Locks og sikker kontekst (HTTPS eller localhost) kreves for administrasjonslagring og trygg bildeopprydding; butikken kan fortsatt leses uten dette.
+Import har samme 50 MB filgrense, krever bekreftelse og validerer skjema, verdier, språk og nødvendige bildebytes. Bilder behandles sekvensielt og får nye ID-er før konfigurasjonen erstattes. Feil før lagring bevarer eksisterende konfigurasjon og forsøker å rulle tilbake nye bilder. Opprydding kan feile etter at import/nullstilling er lagret; en feilmelding betyr derfor ikke alltid at operasjonen ble helt ugjort. Nettleseren kan gå tom for minne eller lagringsplass innenfor grensene.
 
-Eksport estimerer UTF-8 JSON-overhead, MIME-prefikser og polstret Base64-størrelse for alle bildefiler **før** første Base64-streng opprettes. En løpende grense håndhever 50 MB, og eksport viser fremdrift. Import bruker samme 50 MB filgrense. Feil erstatter ikke eksisterende konfigurasjon. Nettleseren kan fortsatt gå tom for minne eller lagringsplass innenfor grensene.
+Ubrukte opplastinger ryddes ved bildeendringer, avbrutte redigeringer, gjenoppretting, nullstilling og mislykkede importer. Lagrede bilder, eksportbilder og aktive utkast i andre faner beskyttes, også i suspenderte faner. Etter at en fane lukkes, kan ubrukte bilder ryddes ved neste redigering eller med «Rydd ubrukte opplastinger». Uleselige lagringsdata stopper oppryddingen. Gamle `abyrvalg-draft:*`-økternøkler fjernes foreløpig ikke; sikker opprydding er gjenstående arbeid.
 
-Før import av eksterne bilder vises vertsnavnene i bekreftelsen, før noen av disse bildene lastes. Alle bildeelementer bruker `referrerPolicy="no-referrer"`. Eksterne bildeverter mottar likevel bildeforespørsler og IP-adressen din. HTTPS skjuler ikke disse opplysningene for verten. Canvas-behandling gjelder lokale opplastinger/importerte bildebytes; eksterne bildeadresser kan ikke renses lokalt. Demoen er ikke en grense mot ondsinnet kode eller manuell endring av nettleserlagring.
+### Verifikasjon og videre bruk
 
-Butikkinnholdets tospråklige standardverdier deles av administrasjonen og butikken. Uendrede hovedbannerfelt lagres ikke som overstyringer, slik at opprinnelige linjeskift og utheving beholdes. Butikknavnet brukes i sidetitler, hjemlenkens tilgjengelige navn og synlig profil. Eksisterende ordrebehandling og kontrollene for å slette lokale ordre finnes fortsatt under `/admin/orders`.
+Tester finnes for administrasjon, fanekonflikter, bilder, feil og kurv/kasse. Testkode er ikke i seg selv dokumentasjon på vellykket kjøring. Se `TODO.md` for faktisk verifikasjon og gjenstående manuelle kontroller; automatiserte tilgjengelighetstester dokumenterer ikke fullt WCAG-samsvar.
 
-Ekstra sikkerhetsregresjoner: `tests/admin-safety.test.js` og `tests/browser/admin-safety.spec.js` dekker fanekonflikter, beskyttede utkast, bildeopprydding, importrullering, tidlig eksportavvisning, API-paginering, profil, bildekontroll og eksternvertbekreftelse.
+GitHub Pages bruker ikke sikkerhetsheaderne i `netlify.toml`; historiske deploy- og Snyk-resultater verifiserer ikke siste versjon. Ved eventuell Netlify-migrering må ruter og faktiske headere kontrolleres der. Ekte salg krever sikker backend, autentisering, betaling, ordrebehandling og juridisk informasjon. Nye eller endrede API-produkter kan trenge oppdaterte oversettelser. Valgfrie demoideer står i `NICE_TO_HAVE.md`.
