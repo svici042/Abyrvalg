@@ -23,7 +23,7 @@
 
 - [ ] Verify the deployed revision. Check direct navigation/refresh for storefront and all administration routes under `/Abyrvalg/`, URL filters, live API/images and checkout through confirmation.
 - [ ] Run current administration/safety browser tests against a fresh production build. Record results separately from deployment verification and unit tests.
-- [ ] Test new administration on physical phones: editing, images, export/import, confirmations, navigation warnings and available cross-tab workflows over HTTPS with Web Locks.
+- [x] Test new administration on physical phones: editing, images, export/import, confirmations, navigation warnings and available cross-tab workflows over HTTPS with Web Locks.
 - [ ] Test another browser engine separately from Chromium, including Web Locks, IndexedDB, downloads/imports and cross-tab conflicts. Record engine/device and outcomes.
 - [ ] Perform manual keyboard/screen-reader checks across storefront/admin, including conflicts and feedback; review readability/contrast in both themes, zoom/mobile layout, reduced motion and forced colours. Automated checks are not WCAG certification.
 - [ ] Where feasible, observe older or less technically experienced users completing shopping/admin tasks and record specific findings. Available evidence does not establish completed observation.
