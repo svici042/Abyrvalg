@@ -36,7 +36,19 @@
 
 ## Only if moving to Netlify
 
+- [x] Fix the confirmed image-policy mismatch locally: `img-src` now permits `blob:` and HTTPS images, matching administration's external URL validation. Production Chromium regressions cover both resource policies; administration upload/order/export/import and content editing tests pass with the HTML policy. Actual Netlify response verification remains below.
 - [ ] After an authorised migration/deployment, verify direct routes, SPA fallback, API/images, actual response headers and purchase flow in a private browser session. Migration is not required by the current assignment.
+
+## Security audit — 2026-10-02
+
+- Evidence: `npm audit --json` reported zero known vulnerabilities (106 dependencies). All 29 unit tests and 24 administration-safety Chromium tests passed. A new imported-HTML regression passed: product/store payloads remained text and did not execute. Pattern scanning of current Git-tracked text found no likely credential matches; Git history and account settings were not audited.
+- [x] Local hardening: production HTML receives CSP and `no-referrer` using the Netlify resource policy; the static Pages fallback also has a restrictive policy. Netlify config retains framing protection, `nosniff` and Permissions-Policy, and adds HSTS. Chromium verifies allowed blob/HTTPS images, blocked inline/external injected scripts and denied cross-origin framing under the response policy.
+- [ ] Verify hardening after an authorised deployment. The audited public root had HSTS but lacked CSP and other security headers. Pages cannot provide the configured framing/`nosniff` response headers; complete header protection requires a supporting host/proxy. HTML CSP does not prevent framing. No migration or deployment was performed.
+- [x] Pin all five Actions to full SHAs resolved from official version tags on 2026-10-02. Separate build (contents/Pages read) from deployment (Pages/OIDC write). Update pins deliberately when adopting new action releases. The workflow has not been executed remotely during this change.
+- Verification of these changes on 2026-10-02: lint, normal and Pages production builds passed; all 15 targeted production Chromium administration/security tests and all 7 local Pages-route tests passed. These are local tests, not evidence of deployed headers or a successful remote workflow.
+- Accepted demo limits: administration has no authentication; order/customer fields remain readable in localStorage. Paths under the same Pages origin share storage, including other applications on `svici042.github.io`. Use fictional data; real customer data requires an isolated origin and secure backend/access control. See [OWASP browser-storage guidance](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html).
+- Accepted image privacy limits: animated backup restoration retains original metadata after explicit consent; external image hosts receive requests/IP addresses. These are documented choices, not metadata sanitization or anonymous fetching. Import only trusted animated backups.
+- Scope: source/configuration review, current dependency advisories, isolated/local browser checks and a read-only public header request. This is not a full penetration test or verification that the latest local revision is deployed.
 
 ## Only if this becomes a real shop
 

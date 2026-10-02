@@ -14,6 +14,7 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+    Referrer-Policy = "no-referrer"
+    Strict-Transport-Security = "max-age=31536000"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://cdn.dummyjson.com https://dummyjson.com; connect-src 'self' https://dummyjson.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://dummyjson.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
