@@ -5,6 +5,28 @@ test.beforeEach(async ({ page }) => {
   await mockApi(page)
 })
 
+test('lazy administration routes load and refresh beneath the production base', async ({
+  page,
+}) => {
+  for (const path of [
+    'admin',
+    'admin/products',
+    'admin/content',
+    'admin/orders',
+    'admin/orders/missing',
+  ]) {
+    await page.goto(`/Abyrvalg/${path}`)
+    await expect(
+      page.getByRole('heading', { name: 'Demoadministrasjon', exact: true }),
+    ).toBeVisible()
+    await expect(page).toHaveURL(new RegExp(`/Abyrvalg/${path}$`))
+    await page.reload()
+    await expect(
+      page.getByRole('heading', { name: 'Demoadministrasjon', exact: true }),
+    ).toBeVisible()
+  }
+})
+
 test('production base restores direct product URLs, queries, fragments and refreshes', async ({
   page,
 }) => {

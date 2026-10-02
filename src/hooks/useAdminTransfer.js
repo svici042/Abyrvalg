@@ -22,6 +22,7 @@ import {
   releaseImages,
 } from '../utils/adminStorage'
 import { assertExportSize, MAX_CONFIG_SIZE } from '../utils/exportLimit'
+import { ANIMATION_IMPORT_PROMPT } from '../utils/imageValidation'
 
 export function useAdminTransfer() {
   const { config, save, warning } = useAdmin()
@@ -105,9 +106,14 @@ export function useAdminTransfer() {
           )
         )
           return
+        let animationAccepted = false
         const mapping = await importImages(
           imageReferences(next),
           payload.images,
+          () => {
+            animationAccepted ||= window.confirm(t(ANIMATION_IMPORT_PROMPT))
+            return animationAccepted
+          },
         )
         imported = Object.values(mapping)
         const remap = (reference) => mapping[reference] || reference
@@ -131,8 +137,14 @@ export function useAdminTransfer() {
         throw error
       } finally {
         if (committed) {
-          await releaseImages(imported)
-          await cleanupImages()
+          try {
+            await releaseImages(imported)
+            await cleanupImages()
+          } catch {
+            setFeedback(
+              'Configuration imported, but unused uploads could not be cleaned up. Try cleanup again.',
+            )
+          }
         }
       }
     })
@@ -157,7 +169,14 @@ export function useAdminTransfer() {
       return
     return run(async () => {
       await save(emptyConfig(), config, expectedRaw)
-      await cleanupImages()
+      try {
+        await cleanupImages()
+      } catch {
+        setFeedback(
+          'Administration changes reset, but unused uploads could not be cleaned up. Cart, preferences and orders preserved. Try cleanup again.',
+        )
+        return
+      }
       setFeedback(
         'Administration changes reset. Cart, preferences and orders preserved.',
       )

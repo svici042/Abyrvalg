@@ -144,13 +144,9 @@ test('checkout validates, prevents duplicates, snapshots NOK and administers sav
   ).toHaveValue('shipped')
   await expect(page.getByText('Simulated paid', { exact: true })).toBeVisible()
   await page.getByRole('link', { name: 'Back to orders', exact: true }).click()
-  await page
-    .getByRole('combobox', { name: 'Fulfilment status', exact: true })
-    .selectOption('new')
+  await page.locator('[name="status"]').selectOption('new')
   await expect(page.getByText('No orders to show')).toBeVisible()
-  await page
-    .getByRole('combobox', { name: 'Fulfilment status', exact: true })
-    .selectOption('shipped')
+  await page.locator('[name="status"]').selectOption('shipped')
   await page.getByRole('link', { name: 'Open order' }).click()
   await expect(page).toHaveURL(/\/admin\/orders\/AB-/)
   await expect(page.locator('[name="fulfilmentStatus"]')).toBeVisible()
@@ -203,6 +199,93 @@ test('failed order write retains cart and retry succeeds once', async ({
     ),
   ).toBe(1)
 })
+
+for (const change of ['price', 'stock', 'visibility']) {
+  test(`checkout rejects cross-tab ${change} changes during payment`, async ({
+    page,
+    context,
+  }) => {
+    // Hold only the simulated payment so the external save happens deterministically.
+    await page.addInitScript(() => {
+      const original = window.setTimeout
+      window.setTimeout = (callback, delay, ...args) => {
+        if (delay === 700) {
+          window.finishDemoPayment = () => callback(...args)
+          return 0
+        }
+        return original(callback, delay, ...args)
+      }
+    })
+    await prepareCheckout(page)
+    const second = await context.newPage()
+    await mockApi(second)
+    await second.goto('/admin/products')
+    await second
+      .getByRole('button', { name: 'Rediger produkt #1', exact: true })
+      .click()
+    await page
+      .getByRole('button', { name: 'Simuler betaling og bestill' })
+      .click()
+    if (change === 'price')
+      await second.locator('[name="productPrice"]').fill('210')
+    else if (change === 'stock')
+      await second.locator('[name="productStock"]').fill('0')
+    else await second.locator('[name="productHidden"]').check()
+    await second.getByRole('button', { name: 'Lagre', exact: true }).click()
+    await expect(
+      second.getByRole('status').filter({ hasText: 'Endringene er lagret' }),
+    ).toBeVisible()
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const cart = JSON.parse(localStorage.getItem('abyrvalg-cart'))
+          return cart.length ? cart[0].price : null
+        }),
+      )
+      .toBe(change === 'price' ? 20 : null)
+    await page.evaluate(async () => {
+      window.finishDemoPayment()
+      await new Promise(requestAnimationFrame)
+      await new Promise(requestAnimationFrame)
+    })
+    if (change === 'price') {
+      await expect(
+        page.getByRole('button', { name: 'Simuler betaling og bestill' }),
+      ).toBeEnabled()
+    } else {
+      await expect(
+        page.getByText('Her er det plass til gode funn'),
+      ).toBeVisible()
+    }
+    expect(
+      await page.evaluate(() =>
+        JSON.parse(localStorage.getItem('abyrvalg-orders') || '[]'),
+      ),
+    ).toHaveLength(0)
+    await expect(page).toHaveURL(/\/checkout$/)
+    if (change === 'price') {
+      expect(
+        await page.evaluate(
+          () => JSON.parse(localStorage.getItem('abyrvalg-cart'))[0].price,
+        ),
+      ).toBe(20)
+      await expect(page.getByRole('alert')).toContainText(
+        'Kontroller den oppdaterte handlekurven',
+      )
+      await page
+        .getByRole('button', { name: 'Simuler betaling og bestill' })
+        .click()
+      await page.evaluate(() => window.finishDemoPayment())
+      await expect(page).toHaveURL(/\/orders\/AB-/)
+      const orders = await page.evaluate(() =>
+        JSON.parse(localStorage.getItem('abyrvalg-orders')),
+      )
+      expect(orders).toHaveLength(1)
+      expect(orders[0].lines[0].basePrice).toBe(20)
+      expect(orders[0].totalMinor).toBe(21000)
+    }
+  })
+}
 
 test('invalid saved orders are not overwritten, and empty/missing routes are useful', async ({
   page,

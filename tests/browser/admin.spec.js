@@ -79,11 +79,13 @@ test('complete catalogue editing, currency stability, refresh and individual res
   await edit(page)
   page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Restore original product' }).click()
-  expect(
-    await page.evaluate(
-      () => JSON.parse(localStorage.getItem('abyrvalg-admin')).products[25],
-    ),
-  ).toBeUndefined()
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => JSON.parse(localStorage.getItem('abyrvalg-admin')).products[25],
+      ),
+    )
+    .toBeUndefined()
 })
 test('image uploads, ordering, main image, removal, persistence and export/import', async ({
   page,

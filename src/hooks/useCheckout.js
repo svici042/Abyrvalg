@@ -1,11 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from './useCart'
 import { useOrders } from './useOrders'
 import { createOrder } from '../utils/orders'
+import { calculateQuote } from '../utils/money'
 
 export function useCheckout() {
-  const { clearCart, revalidate, ready } = useCart()
+  const cart = useCart()
+  const { clearCart, revalidate, ready } = cart
+  const latestCart = useRef(cart)
+  // Payment resumes after an await; its original render may contain stale merchandise.
+  useLayoutEffect(() => {
+    latestCart.current = cart
+  }, [cart])
   const { addOrder } = useOrders()
   const navigate = useNavigate()
   const [processing, setProcessing] = useState(false)
@@ -39,13 +46,22 @@ export function useCheckout() {
       setSubmittedQuote(order)
       await new Promise((resolve) => setTimeout(resolve, 700))
       if (!active.current) return
-      if (!revalidate()) throw Error('Cart changed')
+      const current = latestCart.current
+      if (
+        !current.ready ||
+        !current.revalidate() ||
+        JSON.stringify(calculateQuote(current.items, quote.currency)) !==
+          JSON.stringify(quote)
+      )
+        throw Error('Cart changed')
       addOrder(order)
       clearCart()
       navigate(`/orders/${order.id}`, { replace: true })
-    } catch {
+    } catch (error) {
       setError(
-        'The order could not be saved. Your cart is unchanged. Allow local storage and try again.',
+        error.message === 'Cart changed'
+          ? 'Review the updated cart before checkout. Product data must finish loading.'
+          : 'The order could not be saved. Your cart is unchanged. Allow local storage and try again.',
       )
       locked.current = false
       setProcessing(false)

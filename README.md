@@ -32,12 +32,12 @@ Skjemaene bruker Lagre/Avbryt og varsler ved navigasjon med ulagrede endringer. 
 
 Normalt brukes API-søk, kategorifiltrering og sortering med `limit=12` og `skip`. Søket bruker API-ets originaltekst. Når minst én produktoverstyring er lagret, lastes hele katalogen i en separat hurtigbuffer: lokale endringer brukes før skjuling, søk, filtrering, sortering og paginering. Søket inkluderer da lokale tekstendringer i valgt språk. Innholdsendringer alene aktiverer ikke denne modusen.
 
-Administrasjonen laster hele katalogen. Produktdetaljer og kurv henter nødvendige enkeltprodukter. Nylig sett bruker lagrede øyeblikksbilder med gjeldende overstyringer. Kurven oppdaterer pris, begrenser antall til lager og fjerner skjulte eller utilgjengelige varer med varsel. Kassen kontrollerer kurven før og etter simulert behandling; produktendringer fra andre faner under behandlingen trenger ytterligere testing. Lagrede ordre beholder historiske pris- og tekstøyeblikksbilder.
+Administrasjonen laster hele katalogen. Produktdetaljer og kurv henter nødvendige enkeltprodukter. Nylig sett bruker lagrede øyeblikksbilder med gjeldende overstyringer. Kurven oppdaterer pris, begrenser antall til lager og fjerner skjulte eller utilgjengelige varer med varsel. Kassen kontrollerer nyeste kurv før og etter simulert behandling og avviser en ordre hvis det gjennomgåtte pristilbudet er endret. Regresjonstester dekker pris, lager og skjuling fra en annen fane under behandlingen. Lagrede ordre beholder historiske pris- og tekstøyeblikksbilder.
 
 ## 2. Teknologivalg og grunner
 
 - React og Vite gir komponentbasert grensesnitt og rask lokal utvikling.
-- React Router håndterer sider, URL-filtre og nettleserhistorikk.
+- React Router håndterer sider, URL-filtre og nettleserhistorikk. Administrasjonsrutene lastes ved behov i separate JavaScript-pakker.
 - Axios og TanStack Query håndterer API-forespørsler og hurtigbuffer.
 - CSS Modules og CSS-variabler organiserer stiler og temaer.
 - localStorage lagrer tekst og tilstand; IndexedDB lagrer opplastede bildebytes.
@@ -98,7 +98,7 @@ Ulagrede utkast overskrives ikke automatisk. Ved konflikt kan du laste inn lagre
 - Lokale stillbilder: JPG/JPEG, PNG, WebP og GIF. SVG og andre filtyper avvises.
 - Maksimalt 5 MB per bilde, 4096 piksler per side og 16 millioner piksler totalt. Produktgalleriet tillater opptil 30 bilder; logoen er ett bilde.
 - Filhoder og dimensjoner kontrolleres før dekoding. Canvas koder JPEG som JPEG og øvrige formater som PNG uten originalmetadata; resultatet må også være innenfor 5 MB.
-- Nye animerte GIF/PNG/WebP-opplastinger og importer avvises. Eksisterende lagrede animasjoner beholdes og kan eksporteres, men **kan ikke importeres igjen i dag**. En slik eksport er derfor ikke en fullstendig gjenopprettbar sikkerhetskopi.
+- Nye animerte GIF/PNG/WebP-opplastinger avvises. Eksisterende animasjoner kan eksporteres og importeres fra en sikkerhetskopi med egen bekreftelse. Originale bildebytes og metadata beholdes for å bevare animasjonen; bruk bare sikkerhetskopier du stoler på. Avslag avbryter importen og bevarer tidligere innstillinger. Samme fil- og dimensjonsgrenser gjelder, med maksimalt 300 rammer og 64 millioner rammepiksler per animasjon.
 - Opplastinger lagres som Blob i IndexedDB (`abyrvalg-images`), med referanser i konfigurasjonen. Manglende bilder får reservevisning.
 
 Nye og importerte eksterne bildeadresser må bruke HTTPS. Eldre HTTP-referanser beholdes i dataene, men blokkeres fra visning og må erstattes før lagring/import. Eksterne bilder behandles ikke med canvas og har ikke de lokale filgrensene eller metadatafjerningen. De krever nettverk og kan slutte å virke.
@@ -109,9 +109,9 @@ Før import viser bekreftelsen eksterne bildeverter før bildene lastes. Bildeel
 
 JSON-eksport inkluderer administrasjonskonfigurasjon og opplastede bildebytes, ikke kurv, preferanser, ordrehistorikk eller kundeopplysninger. Eksterne bilder eksporteres som adresser. Eksport beregner UTF-8 JSON-overhead, MIME-prefikser og polstret Base64-størrelse før første Base64-streng opprettes, og håndhever en løpende 50 MB-grense med fremdriftsmelding. Manglende opplastinger stopper eksporten.
 
-Import har samme 50 MB filgrense, krever bekreftelse og validerer skjema, verdier, språk og nødvendige bildebytes. Bilder behandles sekvensielt og får nye ID-er før konfigurasjonen erstattes. Feil før lagring bevarer eksisterende konfigurasjon og forsøker å rulle tilbake nye bilder. Opprydding kan feile etter at import/nullstilling er lagret; en feilmelding betyr derfor ikke alltid at operasjonen ble helt ugjort. Nettleseren kan gå tom for minne eller lagringsplass innenfor grensene.
+Import har samme 50 MB filgrense, krever bekreftelse og validerer skjema, verdier, språk og nødvendige bildebytes. Bilder behandles sekvensielt og får nye ID-er før konfigurasjonen erstattes. Feil før lagring bevarer eksisterende konfigurasjon og forsøker å rulle tilbake nye bilder. Hvis opprydding feiler etter en lagret import/nullstilling, opplyser meldingen at konfigurasjonen er lagret og at opprydding må prøves igjen. Nettleseren kan gå tom for minne eller lagringsplass innenfor grensene.
 
-Ubrukte opplastinger ryddes ved bildeendringer, avbrutte redigeringer, gjenoppretting, nullstilling og mislykkede importer. Lagrede bilder, eksportbilder og aktive utkast i andre faner beskyttes, også i suspenderte faner. Etter at en fane lukkes, kan ubrukte bilder ryddes ved neste redigering eller med «Rydd ubrukte opplastinger». Uleselige lagringsdata stopper oppryddingen. Gamle `abyrvalg-draft:*`-økternøkler fjernes foreløpig ikke; sikker opprydding er gjenstående arbeid.
+Ubrukte opplastinger ryddes ved bildeendringer, avbrutte redigeringer, gjenoppretting, nullstilling og mislykkede importer. Lagrede bilder, eksportbilder og aktive utkast i andre faner beskyttes, også i suspenderte faner. Etter at en fane lukkes, kan ubrukte bilder ryddes ved neste redigering eller med «Rydd ubrukte opplastinger». Gamle `abyrvalg-draft:*`-økternøkler valideres og fjernes bare når ingen aktiv eller ventende livstidslås finnes. Nye faner og andre lagringsnøkler beholdes. Uleselige lagringsdata stopper oppryddingen før bilder slettes.
 
 ### Verifikasjon og videre bruk
 

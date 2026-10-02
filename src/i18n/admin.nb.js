@@ -1,4 +1,14 @@
 export default {
+  'Animated backups must have at most 300 frames and 64 million frame pixels.':
+    'Animerte sikkerhetskopier kan ha maksimalt 300 bilderammer og 64 millioner bilderammepiksler.',
+  'This backup contains animated images. Restore their original bytes to preserve animation? Original metadata will also be retained. Only continue with a trusted backup.':
+    'Sikkerhetskopien inneholder animerte bilder. Gjenopprette originaldataene for å bevare animasjonen? Opprinnelige metadata beholdes også. Fortsett bare med en sikkerhetskopi du stoler på.',
+  'Animated image import cancelled. Existing settings are unchanged.':
+    'Import av animerte bilder er avbrutt. Eksisterende innstillinger er uendret.',
+  'Configuration imported, but unused uploads could not be cleaned up. Try cleanup again.':
+    'Konfigurasjonen er importert, men ubrukte opplastinger kunne ikke ryddes. Prøv opprydding igjen.',
+  'Administration changes reset, but unused uploads could not be cleaned up. Cart, preferences and orders preserved. Try cleanup again.':
+    'Administrasjonsendringene er nullstilt, men ubrukte opplastinger kunne ikke ryddes. Handlekurv, preferanser og ordrer er beholdt. Prøv opprydding igjen.',
   'Administration operation failed. Allow browser storage or free up space.':
     'Administrasjonshandlingen mislyktes. Tillat nettleserlagring eller frigjør plass.',
   'Administration changed in another tab. Your draft is preserved. Reload saved data or explicitly keep your draft to replace this section.':

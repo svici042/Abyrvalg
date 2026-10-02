@@ -29,8 +29,8 @@ async function transaction(mode, action) {
     db.close()
   }
 }
-export async function putImage(file) {
-  const blob = await sanitizeImage(file)
+export async function putImage(file, confirmAnimation) {
+  const blob = await sanitizeImage(file, confirmAnimation)
   const reference = `image:${crypto.randomUUID()}`
   try {
     await administrationLock(async () => {
@@ -93,7 +93,7 @@ export async function exportImages(
   }
   return images
 }
-export async function importImages(references, images = {}) {
+export async function importImages(references, images = {}, confirmAnimation) {
   const mapping = {}
   try {
     // Sequential decoding bounds memory usage; failed partial imports are rolled back.
@@ -114,6 +114,7 @@ export async function importImages(references, images = {}) {
       }
       mapping[reference] = await putImage(
         new Blob([bytes], { type: header.slice(5, header.indexOf(';')) }),
+        confirmAnimation,
       )
     }
     return mapping

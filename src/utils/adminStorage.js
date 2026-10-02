@@ -95,7 +95,14 @@ export function readAdministration() {
 }
 export async function protectedImages() {
   const references = new Set(imageReferences(readAdministration().config))
-  const { held } = await navigator.locks.query()
+  // Snapshot keys before querying locks so newly starting tabs are never deleted.
+  const sessions = []
+  for (let index = 0; index < localStorage.length; index++) {
+    const name = localStorage.key(index)
+    if (name?.startsWith(PREFIX)) sessions.push(name)
+  }
+  const { held, pending } = await navigator.locks.query()
+  const active = new Set([...held, ...pending].map(({ name }) => name))
   for (const { name } of held) {
     if (!name.startsWith(PREFIX)) continue
     const raw = localStorage.getItem(name)
@@ -110,6 +117,19 @@ export async function protectedImages() {
       for (const reference of entries) references.add(reference)
     }
   }
+  // Validate every stale record before deleting any; malformed storage fails closed.
+  const obsolete = sessions.filter((name) => !active.has(name))
+  for (const name of obsolete) {
+    const raw = localStorage.getItem(name)
+    if (raw === null) continue
+    const entries = JSON.parse(raw)
+    if (
+      !Array.isArray(entries) ||
+      entries.some((entry) => typeof entry !== 'string')
+    )
+      throw Error(STORAGE_ERROR)
+  }
+  for (const name of obsolete) localStorage.removeItem(name)
   return references
 }
 export async function persistAdministration(next, expectedRaw) {

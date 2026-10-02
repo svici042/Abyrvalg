@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { mockApi } from './fixtures'
+import { readFileSync } from 'node:fs'
 
 async function prepare(page) {
   await mockApi(page)
@@ -608,19 +609,17 @@ test('importing in another tab preserves the active content draft and signals a 
   await prepare(second)
   await second.goto('/admin')
   second.once('dialog', (dialog) => dialog.accept())
-  await second
-    .locator('[name="adminConfigurationImport"]')
-    .setInputFiles({
-      name: 'config.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from(
-        JSON.stringify({
-          version: 1,
-          products: {},
-          content: { storeName: { en: 'Imported name', nb: 'Importert navn' } },
-        }),
-      ),
-    })
+  await second.locator('[name="adminConfigurationImport"]').setInputFiles({
+    name: 'config.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(
+      JSON.stringify({
+        version: 1,
+        products: {},
+        content: { storeName: { en: 'Imported name', nb: 'Importert navn' } },
+      }),
+    ),
+  })
   await expect(
     second.getByRole('status').filter({ hasText: 'Configuration imported' }),
   ).toBeVisible()
@@ -649,4 +648,254 @@ test('closed-tab uploads become eligible for explicit cleanup', async ({
   await second.close()
   await page.getByRole('button', { name: 'Clean up unused uploads' }).click()
   await expect.poll(() => keys(page)).toHaveLength(0)
+})
+
+for (const operation of ['import', 'reset']) {
+  test(`${operation} reports a committed configuration when image cleanup fails`, async ({
+    page,
+  }) => {
+    await prepare(page)
+    await page.goto('/admin')
+    await page.evaluate(() => {
+      indexedDB.open = () => {
+        throw Error('Image storage unavailable')
+      }
+    })
+    page.once('dialog', (dialog) => dialog.accept())
+    if (operation === 'import') {
+      await page.locator('[name="adminConfigurationImport"]').setInputFiles({
+        name: 'config.json',
+        mimeType: 'application/json',
+        buffer: Buffer.from(
+          JSON.stringify({
+            version: 1,
+            products: {},
+            content: {
+              storeName: { en: 'Imported name', nb: 'Importert navn' },
+            },
+          }),
+        ),
+      })
+    } else {
+      await page
+        .getByRole('button', { name: 'Reset administration changes' })
+        .click()
+    }
+    await expect(
+      page.getByRole('status').filter({
+        hasText: 'but unused uploads could not be cleaned up',
+      }),
+    ).toBeVisible()
+    const config = await page.evaluate(() =>
+      JSON.parse(localStorage.getItem('abyrvalg-admin')),
+    )
+    expect(config.content).toEqual(
+      operation === 'import'
+        ? { storeName: { en: 'Imported name', nb: 'Importert navn' } }
+        : {},
+    )
+  })
+}
+
+for (const [extension, type] of [
+  ['gif', 'image/gif'],
+  ['png', 'image/png'],
+  ['webp', 'image/webp'],
+]) {
+  test(`legacy ${extension} animation survives export/import with explicit metadata consent`, async ({
+    page,
+  }) => {
+    await prepare(page)
+    await page.goto('/admin')
+    const bytes = readFileSync(
+      new URL(`../fixtures/legacy-animated.${extension}`, import.meta.url),
+    )
+    const data = `data:${type};base64,${bytes.toString('base64')}`
+    // Seed a legacy upload, then exercise the real exporter rather than a hand-written backup.
+    await page.evaluate(
+      async ({ data, type }) => {
+        const blob = new Blob(
+          [
+            Uint8Array.from(atob(data.split(',')[1]), (char) =>
+              char.charCodeAt(0),
+            ),
+          ],
+          { type },
+        )
+        const request = indexedDB.open('abyrvalg-images', 1)
+        await new Promise((resolve, reject) => {
+          request.onupgradeneeded = () =>
+            request.result.createObjectStore('images')
+          request.onerror = reject
+          request.onsuccess = () => {
+            const db = request.result
+            const tx = db.transaction('images', 'readwrite')
+            tx.objectStore('images').put(blob, 'image:legacy')
+            tx.oncomplete = () => {
+              db.close()
+              resolve()
+            }
+            tx.onerror = reject
+          }
+        })
+        localStorage.setItem(
+          'abyrvalg-admin',
+          JSON.stringify({
+            version: 1,
+            products: {},
+            content: { logo: 'image:legacy' },
+          }),
+        )
+      },
+      { data, type },
+    )
+    await page.reload()
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Export configuration' }).click()
+    const download = await downloadPromise
+    const backup = readFileSync(await download.path())
+    expect(JSON.parse(backup).images['image:legacy']).toBe(data)
+    const before = await page.evaluate(() =>
+      localStorage.getItem('abyrvalg-admin'),
+    )
+    // Reject the second confirmation: no partial settings or image writes survive.
+    const denyAnimation = async (dialog) => {
+      if (dialog.message().includes('Original metadata')) await dialog.dismiss()
+      else await dialog.accept()
+    }
+    page.on('dialog', denyAnimation)
+    const file = {
+      name: 'backup.json',
+      mimeType: 'application/json',
+      buffer: backup,
+    }
+    await page.locator('[name="adminConfigurationImport"]').setInputFiles(file)
+    await expect(
+      page
+        .getByRole('status')
+        .filter({ hasText: 'Animated image import cancelled' }),
+    ).toBeVisible()
+    expect(
+      await page.evaluate(() => localStorage.getItem('abyrvalg-admin')),
+    ).toBe(before)
+    expect(await keys(page)).toEqual(['image:legacy'])
+    page.off('dialog', denyAnimation)
+    const disclosures = []
+    const accept = async (dialog) => {
+      disclosures.push(dialog.message())
+      await dialog.accept()
+    }
+    page.on('dialog', accept)
+    await page.locator('[name="adminConfigurationImport"]').setInputFiles(file)
+    await expect(
+      page
+        .getByRole('status')
+        .filter({ hasText: 'Configuration imported in this browser' }),
+    ).toBeVisible()
+    expect(
+      disclosures.some((message) => message.includes('Original metadata')),
+    ).toBe(true)
+    page.off('dialog', accept)
+    const reexportPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Export configuration' }).click()
+    const restored = JSON.parse(
+      readFileSync(await (await reexportPromise).path(), 'utf8'),
+    )
+    expect(restored.content.logo).not.toBe('image:legacy')
+    expect(restored.images[restored.content.logo]).toBe(data)
+    await expect.poll(() => keys(page)).toEqual([restored.content.logo])
+  })
+}
+
+test('cleanup removes only unlocked valid sessions and stops on unreadable records', async ({
+  page,
+  context,
+}) => {
+  await prepare(page)
+  await page.goto('/admin/content')
+  await upload(page)
+  const second = await context.newPage()
+  await prepare(second)
+  await second.goto('/admin')
+  await second.evaluate(() => {
+    localStorage.setItem('abyrvalg-draft:closed', '[]')
+    localStorage.setItem('unrelated-demo', 'preserved')
+  })
+  await second.getByRole('button', { name: 'Clean up unused uploads' }).click()
+  const active = await page.evaluate(async () => {
+    const { held } = await navigator.locks.query()
+    return held
+      .filter(({ name }) => name.startsWith('abyrvalg-draft:'))
+      .map(({ name }) => name)
+  })
+  expect(active).toHaveLength(2)
+  expect(
+    await second.evaluate(() => localStorage.getItem('abyrvalg-draft:closed')),
+  ).toBeNull()
+  for (const name of active)
+    expect(
+      await second.evaluate((key) => localStorage.getItem(key), name),
+    ).not.toBeNull()
+  expect(await keys(page)).toHaveLength(1)
+  await second.evaluate(() => {
+    localStorage.setItem('abyrvalg-draft:valid', '[]')
+    localStorage.setItem('abyrvalg-draft:broken', '{invalid')
+  })
+  await second.getByRole('button', { name: 'Clean up unused uploads' }).click()
+  await expect(
+    second
+      .getByRole('status')
+      .filter({ hasText: 'Administration operation failed' }),
+  ).toBeVisible()
+  expect(
+    await second.evaluate(() => localStorage.getItem('abyrvalg-draft:valid')),
+  ).toBe('[]')
+  expect(await keys(page)).toHaveLength(1)
+  await second.evaluate(() => localStorage.removeItem('abyrvalg-draft:broken'))
+  await page.close()
+  await second.getByRole('button', { name: 'Clean up unused uploads' }).click()
+  await expect.poll(() => keys(second)).toHaveLength(0)
+  const remaining = await second.evaluate(() =>
+    Object.keys(localStorage).filter((key) =>
+      key.startsWith('abyrvalg-draft:'),
+    ),
+  )
+  expect(remaining).toHaveLength(1)
+  expect(
+    await second.evaluate(() => localStorage.getItem('unrelated-demo')),
+  ).toBe('preserved')
+})
+
+test('storefront defers administration chunks while direct admin routes still load', async ({
+  page,
+}) => {
+  await prepare(page)
+  const requests = []
+  page.on('request', (request) => requests.push(request.url()))
+  await page.goto('/')
+  await expect(page.getByRole('article')).toHaveCount(12)
+  expect(
+    requests.some((url) =>
+      /Admin(ProductsPage|ContentPage|DashboardPage|OrdersPage|Layout)/.test(
+        url,
+      ),
+    ),
+  ).toBe(false)
+  await page
+    .getByRole('link', { name: 'Demo administration', exact: true })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Dashboard', exact: true }),
+  ).toBeVisible()
+  expect(requests.some((url) => url.includes('AdminDashboardPage'))).toBe(true)
+  for (const path of ['/admin/products', '/admin/content', '/admin/orders']) {
+    await page.goto(path)
+    await expect(
+      page.getByRole('heading', { name: 'Demo administration', exact: true }),
+    ).toBeVisible()
+    await page.reload()
+    await expect(
+      page.getByRole('heading', { name: 'Demo administration', exact: true }),
+    ).toBeVisible()
+  }
 })

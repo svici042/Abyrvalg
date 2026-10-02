@@ -11,6 +11,7 @@
 
 ## Verification evidence
 
+- [x] Latest local verification on 2026-10-02: all 29 unit tests, lint, normal production build and Pages-base build passed. All 51 targeted Chromium tests in `admin.spec.js`, `admin-safety.spec.js`, `orders.spec.js` and `shop.spec.js` passed against the fresh normal build; all 7 local Pages-route tests passed, including lazy administration routes and refresh. The largest JavaScript chunk is about 385 kB; the 500 kB warning is gone. The Pages build still notes its intentionally unbundled classic restoration script. These are local checks, not deployment, physical-phone or other-engine verification.
 - [x] Documentation review on 2026-10-01: `npm test` passed all 25 unit tests. Browser tests, build, deployment, security scans and manual accessibility checks were not run during this review.
 - [x] User-reported testing: a physical-phone test of the earlier storefront version was successful. This does not cover the newest administration/cross-tab changes or establish another-browser-engine coverage.
 - Historical record: the initial public commit/ignore review reported no apparent credentials or non-example email addresses and excluded dependencies, builds, test output and environment files. This is not a current publication audit.
@@ -22,15 +23,16 @@
 ## Required verification and fixes
 
 - [ ] Verify the deployed revision. Check direct navigation/refresh for storefront and all administration routes under `/Abyrvalg/`, URL filters, live API/images and checkout through confirmation.
-- [ ] Run current administration/safety browser tests against a fresh production build. Record results separately from deployment verification and unit tests.
+- [x] Run current administration/safety browser tests against a fresh production build. See the dated local verification above; deployment verification remains open.
 - [x] Test new administration on physical phones: editing, images, export/import, confirmations, navigation warnings and available cross-tab workflows over HTTPS with Web Locks.
 - [ ] Test another browser engine separately from Chromium, including Web Locks, IndexedDB, downloads/imports and cross-tab conflicts. Record engine/device and outcomes.
 - [ ] Perform manual keyboard/screen-reader checks across storefront/admin, including conflicts and feedback; review readability/contrast in both themes, zoom/mobile layout, reduced motion and forced colours. Automated checks are not WCAG certification.
 - [ ] Where feasible, observe older or less technically experienced users completing shopping/admin tasks and record specific findings. Available evidence does not establish completed observation.
-- [ ] Fix the confirmed backup round-trip limitation for legacy animated images: existing animations export, but re-import is rejected. Choose safe animation-preserving processing or an explicit migration path, then test restoration without silent animation loss.
-- [ ] Check and safely clean obsolete `abyrvalg-draft:*` localStorage session keys. Current cleanup removes unused image blobs but leaves these keys. Use lifetime-lock evidence under the administration lock; preserve active/suspended tabs and stop safely on unreadable data.
-- [ ] Investigate cross-tab product changes during the simulated checkout delay. `useCheckout` retains the starting `revalidate` callback across its await, which may use older configuration after cart reconciliation. Reproduce price, stock and visibility changes before confirming a defect; ensure the eventual order matches a reviewed current quote.
-- [ ] Investigate transfer feedback when cleanup fails after successful import/reset. Configuration may already be saved although a generic failure is shown; test IndexedDB/storage errors and clarify the committed result if reproduced.
+- [x] Restore legacy animated GIF/PNG/WebP backups through explicit confirmation that original metadata is retained. Headers, dimensions, frame count and cumulative frame pixels are bounded; normal uploads remain static-only. Export/import regressions compare original bytes and test cancellation without changing saved data.
+- [x] Clean obsolete `abyrvalg-draft:*` session keys under the administration lock. Snapshot keys before querying lifetime locks; preserve held/pending sessions and validate all obsolete records before deletion. Chromium checks cover active drafts, closed tabs, unreadable records and unrelated keys.
+- [x] Split administration routes into lazy-loaded chunks instead of raising the build warning threshold. The largest production JavaScript chunk is about 385 kB; the previous 500 kB warning is gone. Test deferred loading and direct administration routes/refresh.
+- [x] Reproduced and fixed stale checkout validation during cross-tab product changes: old callbacks could restore the previous cart price. Checkout now uses the latest cart and compares it with the reviewed quote. Chromium regressions cover price, stock and visibility changes, plus retry at the updated price.
+- [x] Reproduced and fixed misleading import/reset failure feedback after configuration was already saved. Cleanup failures now report the committed result and suggest retrying cleanup; both operations have passing Chromium regressions.
 
 ## Only if moving to Netlify
 

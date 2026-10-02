@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import {
   assertExportSize,
   imageExportSize,
@@ -33,7 +34,7 @@ test('headers reject forged MIME, huge dimensions and animations before decoding
   assert.throws(() => validateDimensions(4097, 1))
   assert.throws(() => validateDimensions(4096, 4096))
   validateDimensions(4000, 4000)
-  const bytes = new Uint8Array(48)
+  const bytes = new Uint8Array(53)
   bytes.set([137, 80, 78, 71], 0)
   bytes.set(Buffer.from('IHDR'), 12)
   const view = new DataView(bytes.buffer)
@@ -47,6 +48,31 @@ test('headers reject forged MIME, huge dimensions and animations before decoding
   assert.throws(
     () => inspectImage(bytes, 'image/png'),
     (error) => error.message === ANIMATION_ERROR,
+  )
+})
+
+test('animated GIF import rejects excessive frame counts and out-of-canvas frames', () => {
+  const header = Buffer.from('47494638396101000100800000000000ffffff', 'hex')
+  const frame = Buffer.from('2c0000000001000100000202440100', 'hex')
+  const many = Buffer.concat([
+    header,
+    ...Array(301).fill(frame),
+    Buffer.from([59]),
+  ])
+  assert.throws(
+    () => inspectImage(many, 'image/gif', true),
+    /at most 300 frames/,
+  )
+  const outside = Buffer.from(frame)
+  outside.writeUInt16LE(1, 1)
+  assert.throws(
+    () =>
+      inspectImage(
+        Buffer.concat([header, outside, Buffer.from([59])]),
+        'image/gif',
+        true,
+      ),
+    /Invalid image/,
   )
 })
 test('external hosts are deduplicated and HTTP migration is detected', () => {
@@ -64,6 +90,32 @@ test('external hosts are deduplicated and HTTP migration is detected', () => {
   assert.equal(hasHttpImages(config), true)
   assert.equal(hasHttpImages(emptyConfig()), false)
 })
+
+for (const [extension, type] of [
+  ['gif', 'image/gif'],
+  ['png', 'image/png'],
+  ['webp', 'image/webp'],
+]) {
+  test(`legacy animated ${extension} headers are bounded and require the import path`, () => {
+    const bytes = readFileSync(
+      new URL(`./fixtures/legacy-animated.${extension}`, import.meta.url),
+    )
+    assert.throws(
+      () => inspectImage(bytes, type),
+      (error) => error.message === ANIMATION_ERROR,
+    )
+    assert.deepEqual(inspectImage(bytes, type, true), {
+      width: 2,
+      height: 2,
+      animated: true,
+    })
+    const oversized = Buffer.from(bytes)
+    if (extension === 'gif') oversized.writeUInt16LE(50000, 6)
+    if (extension === 'png') oversized.writeUInt32BE(50000, 16)
+    if (extension === 'webp') oversized.writeUIntLE(49999, 24, 3)
+    assert.throws(() => inspectImage(oversized, type, true), /Invalid image/)
+  })
+}
 test('shared bilingual defaults preserve the original hero segments and correct branding', () => {
   const content = defaultStoreContent()
   assert.equal(content.storeName.en, 'Abyrvalg')
