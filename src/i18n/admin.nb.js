@@ -1,3 +1,4 @@
+// Norwegian translations keyed by the English messages used by administration controls.
 export default {
   'Pause animation': 'Sett animasjonen på pause',
   'Resume animation': 'Fortsett animasjonen',

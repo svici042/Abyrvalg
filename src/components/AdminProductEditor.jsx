@@ -6,6 +6,7 @@ import AdminConflict from './AdminConflict'
 import AdminTextFields from './AdminTextFields'
 import AdminImages from './AdminImages'
 import styles from '../pages/Admin.module.css'
+// Compose the product form while the editor hook owns draft changes and persistence.
 export default function AdminProductEditor({ original, norwegian, onClose }) {
   const { t, currency } = useLanguage()
   const {
@@ -33,7 +34,9 @@ export default function AdminProductEditor({ original, norwegian, onClose }) {
           { currency },
         )}
       </p>
+      {/* Resolve external configuration changes before saving the draft. */}
       <AdminConflict editor={editor} busy={imageBusy} />
+      {/* The same text schema drives both Norwegian and English input groups. */}
       <AdminTextFields
         values={draft.text}
         onChange={text}
@@ -52,11 +55,13 @@ export default function AdminProductEditor({ original, norwegian, onClose }) {
           },
         ]}
       />
+      {/* Reloading changes the key so uncontrolled price input also resets. */}
       <AdminProductFields
         key={editor.generation}
         draft={draft}
         change={change}
       />
+      {/* Image work blocks saving until the gallery and thumbnail references are ready. */}
       <AdminImages
         onBusyChange={setImageBusy}
         images={draft.images}
@@ -65,6 +70,7 @@ export default function AdminProductEditor({ original, norwegian, onClose }) {
           setDraft((current) => ({ ...current, images, thumbnail }))
         }
       />
+      {/* Announce save feedback and draft status without moving keyboard focus. */}
       <p role="status">
         {t(feedback || (dirty ? 'Unsaved changes' : 'No unsaved changes'))}
       </p>
@@ -74,6 +80,7 @@ export default function AdminProductEditor({ original, norwegian, onClose }) {
         onRestore={restore}
         view={`/products/${original.id}`}
         onCancel={() => {
+          // Clean drafts close immediately; edited drafts require discard confirmation.
           if (!dirty || window.confirm(t('Discard unsaved changes?'))) {
             setDraft(baseline)
             onClose()

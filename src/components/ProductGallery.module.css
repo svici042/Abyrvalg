@@ -22,6 +22,7 @@
   width: 68px;
   padding: 4px;
 }
+/* Mirror the accessible selection state in the thumbnail's visible outline. */
 .thumbnails button[aria-pressed='true'] {
   outline: 2px solid var(--selected-indicator);
   outline-offset: 2px;

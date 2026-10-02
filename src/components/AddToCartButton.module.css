@@ -11,6 +11,7 @@
   border-color: var(--action);
   font-weight: 600;
 }
+/* Keep unavailable actions visually disabled when the pointer passes over them. */
 .button:hover:not(:disabled) {
   background: var(--action-hover);
 }

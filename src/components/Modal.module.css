@@ -1,3 +1,4 @@
+/* Constrain native dialogs to the viewport and scroll long content inside them. */
 .dialog {
   width: min(34rem, calc(100% - 2rem));
   max-height: calc(100svh - 2rem);

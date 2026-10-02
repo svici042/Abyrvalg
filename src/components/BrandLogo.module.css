@@ -1,3 +1,4 @@
+/* Shared logo sizing for the header and the compact footer variant. */
 .logo,
 .compact {
   display: block;
@@ -22,6 +23,7 @@
   }
 }
 
+/* Allow a custom store name to wrap within the logo's allotted space. */
 .brand {
   display: block;
   max-width: 190px;

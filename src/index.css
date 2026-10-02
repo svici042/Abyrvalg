@@ -1,3 +1,4 @@
+/* Global typography and default light-theme tokens used by component styles. */
 :root {
   font-family: 'Segoe UI', Arial, sans-serif;
   font-size: 100%;
@@ -49,6 +50,7 @@
   --backdrop: #10161099;
   --shadow: 0 4px 20px #14201926;
 }
+/* Override semantic tokens without duplicating component rules for dark mode. */
 :root[data-theme='dark'] {
   color-scheme: dark;
   --background: #121212;
@@ -91,6 +93,7 @@
   --backdrop: #080c10b3;
   --shadow: 0 4px 20px #0006;
 }
+/* Shared box sizing and page layout keep narrow viewports free of fixed-width constraints. */
 * {
   box-sizing: border-box;
 }
@@ -135,6 +138,7 @@ input,
 select {
   outline-offset: 4px;
 }
+/* Show keyboard focus using a theme-aware indicator. */
 :focus-visible {
   outline: 3px solid var(--focus);
 }
@@ -148,6 +152,7 @@ h3,
 p {
   margin-top: 0;
 }
+/* Base form controls provide consistent spacing and interactive colors. */
 button {
   border: 1px solid var(--control-border);
   border-radius: 6px;
@@ -176,6 +181,7 @@ a:hover {
   color: var(--selected-text);
 }
 
+/* Maintain usable touch targets while keeping checkbox dimensions independent. */
 button,
 input:not([type='checkbox']),
 select {
@@ -218,6 +224,7 @@ summary {
     scroll-behavior: auto !important;
   }
 }
+/* Strengthen boundaries and muted text when the system requests more contrast. */
 @media (prefers-contrast: more) {
   :root {
     --muted: #3f443c;
@@ -235,6 +242,7 @@ summary {
     text-decoration-thickness: 2px;
   }
 }
+/* Use system colors for controls and selection indicators in forced-color mode. */
 @media (forced-colors: active) {
   button,
   input,
@@ -263,6 +271,7 @@ input::placeholder {
   color: var(--placeholder);
   opacity: 1;
 }
+/* Expose validation state through control borders as well as form messages. */
 input[aria-invalid='true'] {
   border-color: var(--error);
   border-width: 2px;
@@ -274,6 +283,7 @@ a[aria-current='page'] {
   text-decoration: underline;
   text-underline-offset: 0.4rem;
 }
+/* Primary actions share the semantic action palette across pages. */
 button[data-primary] {
   background: var(--action);
   color: var(--action-text);

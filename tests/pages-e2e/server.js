@@ -35,6 +35,7 @@ const server = createServer(async (request, response) => {
     return
   }
 
+  // Constrain decoded request paths to the build directory before reading files.
   const relativePath = pathname.slice(basePath.length) || 'index.html'
   const filePath = path.resolve(buildRoot, relativePath)
   if (!filePath.startsWith(buildRoot + path.sep) && filePath !== buildRoot) {
@@ -49,6 +50,7 @@ const server = createServer(async (request, response) => {
     await access(filePath)
     body = await readFile(filePath)
   } catch {
+    // Match GitHub Pages: unknown routes serve the custom 404, not the app shell.
     statusCode = 404
     servedPath = path.join(buildRoot, '404.html')
     body = await readFile(servedPath)

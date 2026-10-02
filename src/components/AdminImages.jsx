@@ -5,6 +5,7 @@ import { ANIMATION_ERROR } from '../utils/imageValidation'
 import { validImage } from '../utils/admin'
 import AdminImageList from './AdminImageList'
 import AdminField from './AdminField'
+// Combine external image URLs, local uploads and gallery selection in one editor.
 export default function AdminImages({
   images,
   main,
@@ -33,6 +34,7 @@ export default function AdminImages({
         )}
       </p>
       <p>{t(ANIMATION_ERROR)}</p>
+      {/* Flag legacy URLs that cannot pass the current HTTPS-only validation. */}
       {images.some((image) => image.startsWith('http:')) && (
         <p role="alert">
           {t(
@@ -51,6 +53,7 @@ export default function AdminImages({
         type="button"
         onClick={() => {
           setError('')
+          // Validate before adding a reference to the draft gallery.
           if (!url.startsWith('https://') || !validImage(url)) {
             setError('Enter a valid HTTPS image URL.')
             return
@@ -65,6 +68,7 @@ export default function AdminImages({
       >
         {t('Add image URL')}
       </button>
+      {/* The upload hook validates and stores files before updating image references. */}
       <label htmlFor={uploadId}>
         {t('Upload image')}
         <input

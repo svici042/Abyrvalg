@@ -6,6 +6,7 @@
   text-decoration: none;
   border-radius: 9px;
 }
+/* Anchor the hover arrow to the product image rather than the full card. */
 .image {
   position: relative;
 }
@@ -26,6 +27,7 @@
   background: var(--action);
   color: var(--action-text);
 }
+/* Product metadata and wrapping price/rating row below the image. */
 .details {
   padding: 15px 1px 20px;
 }

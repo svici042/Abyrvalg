@@ -32,6 +32,7 @@ export default function AdminProductFilters({
           onChange={(event) => updateFilter(setCategory, event.target.value)}
         >
           <option value="">{t('All categories')}</option>
+          {/* Include locally edited categories even when the API has no label for them. */}
           {[...new Set(products.map((product) => product.category))]
             .sort()
             .map((value) => (

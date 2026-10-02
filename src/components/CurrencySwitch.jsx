@@ -3,6 +3,7 @@ import { useCurrency } from '../hooks/useCurrency'
 import { useLanguage } from '../hooks/useLanguage'
 import styles from './Header.module.css'
 
+// Change the shared display currency independently of the interface language.
 export default function CurrencySwitch() {
   const id = useId()
   const { currency, setCurrency } = useCurrency()

@@ -6,6 +6,7 @@
   font-size: 1rem;
   letter-spacing: 0.04em;
 }
+/* Page spacing shared by storefront and administration routes. */
 .main {
   width: 100%;
   flex: 1;
@@ -40,6 +41,7 @@
   color: var(--warning-text);
   border-radius: 6px;
 }
+/* Reveal the keyboard shortcut to main content only while it has focus. */
 .skip {
   position: absolute;
   top: -100px;

@@ -8,6 +8,7 @@
   try {
     const storage = window.sessionStorage
     savedUrl = storage.getItem(storageKey)
+    // Consume the destination once so later visits cannot replay a stale redirect.
     if (savedUrl !== null) storage.removeItem(storageKey)
   } catch {
     return
@@ -22,6 +23,7 @@
     return
   }
 
+  // Restore only same-origin destinations inside this deployment's base path.
   if (
     destination.origin !== window.location.origin ||
     !(

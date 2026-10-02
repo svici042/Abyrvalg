@@ -57,6 +57,7 @@ export default function AdminProductFields({ draft, change }) {
           maxLength={200}
         />
       </div>
+      {/* Visibility changes the storefront listing while retaining the product configuration. */}
       <label htmlFor={visibilityId}>
         <input
           id={visibilityId}

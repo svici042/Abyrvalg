@@ -12,6 +12,7 @@
   font-weight: 600;
   margin: 0;
 }
+/* Desktop categories use a vertical list with an explicit selected state. */
 .list {
   display: flex;
   flex-direction: column;
@@ -58,6 +59,7 @@
 .mobileLabel {
   display: none;
 }
+/* Replace the sidebar controls with a labelled select on smaller screens. */
 @media (max-width: 800px) {
   .list,
   .note,

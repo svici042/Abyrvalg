@@ -8,6 +8,7 @@ export default defineConfig({
     browserName: 'chromium',
     screenshot: 'only-on-failure',
   },
+  // Preview checks the built output; ordinary browser tests use Vite development mode.
   webServer: {
     command: process.env.PLAYWRIGHT_PREVIEW
       ? 'npm run preview -- --host 127.0.0.1 --port 4173'

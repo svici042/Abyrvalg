@@ -7,6 +7,7 @@
   font-size: 1.5rem;
   font-weight: 500;
 }
+/* Display the six-item history as a grid that collapses at smaller breakpoints. */
 .list {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));

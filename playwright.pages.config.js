@@ -8,6 +8,7 @@ export default defineConfig({
     browserName: 'chromium',
     screenshot: 'only-on-failure',
   },
+  // Use a static server with real 404 responses to exercise the Pages redirect scripts.
   webServer: {
     command: 'node tests/pages-e2e/server.js',
     url: 'http://127.0.0.1:4174/Abyrvalg/',

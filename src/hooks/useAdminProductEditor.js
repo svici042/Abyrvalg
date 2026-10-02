@@ -32,6 +32,7 @@ export function useAdminProductEditor(original, norwegian, onClose) {
       },
     }
   }
+  // Share a busy state between image processing and saves to prevent overlapping operations.
   const [feedback, setFeedback] = useState('')
   const [imageBusy, setImageBusy] = useState(false)
   const editor = useAdminDraft(
@@ -40,16 +41,19 @@ export function useAdminProductEditor(original, norwegian, onClose) {
     imageBusy,
   )
   const { base, baseline, draft, setDraft, dirty } = editor
+  // Clear previous save feedback whenever a field changes.
   function change(field, value) {
     setFeedback('')
     setDraft((current) => ({ ...current, [field]: value }))
   }
+  // Replace only the edited translation while preserving the other language and fields.
   function text(language, field, value) {
     change('text', {
       ...draft.text,
       [language]: { ...draft.text[language], [field]: value },
     })
   }
+  // Merge this product into the editor's base; save checks that the base is still current.
   async function submit(event) {
     event.preventDefault()
     if (imageBusy) return
@@ -62,6 +66,7 @@ export function useAdminProductEditor(original, norwegian, onClose) {
         },
         base,
       )
+      // Update the baseline only after persistence succeeds.
       editor.saved(next)
       setFeedback('Changes saved in this browser.')
     } catch (error) {

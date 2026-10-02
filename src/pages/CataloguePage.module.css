@@ -1,3 +1,4 @@
+/* Storefront introduction with a separate decorative illustration panel. */
 .hero {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -44,6 +45,7 @@
   padding: 13px 18px;
   border-radius: 5px;
 }
+/* Keep the motion control in its own row below the clipped illustration. */
 .artArea {
   position: relative;
   display: grid;
@@ -57,6 +59,7 @@
   height: 52px;
   max-width: calc(100% - 24px);
 }
+/* Pause both decorative animations together without resetting their positions. */
 .artArea[data-paused='true'] .star,
 .artArea[data-paused='true'] .orbit {
   animation-play-state: paused;
@@ -79,6 +82,7 @@
   color: var(--action-text);
   text-decoration: underline;
 }
+/* Layered illustration elements and their independent rotation animations. */
 .orbit {
   width: min(290px, 76%);
   aspect-ratio: 1;
@@ -167,6 +171,7 @@
   font-size: 1rem;
   letter-spacing: 1.5px;
 }
+/* Store benefits followed by the category sidebar and product results. */
 .intro {
   display: flex;
   justify-content: space-around;
@@ -181,6 +186,7 @@
   margin-right: 10px;
   color: var(--link);
 }
+/* Use a flexible results column so long product names cannot widen the page. */
 .catalogue {
   display: grid;
   grid-template-columns: 195px minmax(0, 1fr);
@@ -223,6 +229,7 @@
 .results {
   min-width: 0;
 }
+/* Adjust product density and hero proportions across desktop and mobile widths. */
 @media (min-width: 1350px) {
   .grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));

@@ -1,6 +1,7 @@
 .field {
   margin: 1rem 0;
 }
+/* Keep decrement, editable quantity and increment controls together. */
 .controls {
   display: flex;
   gap: 0.5rem;

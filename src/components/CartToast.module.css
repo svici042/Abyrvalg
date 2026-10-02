@@ -1,3 +1,4 @@
+/* Keep purchase feedback visible above the page without exceeding the viewport. */
 .toast {
   position: fixed;
   bottom: 1rem;

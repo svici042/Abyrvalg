@@ -16,6 +16,7 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60000, retry: 1 } },
 })
 
+// Mount shared providers above the router so their state survives page navigation.
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

@@ -11,6 +11,7 @@ export default function AddToCartButton({ product }) {
   const [added, setAdded] = useState(null)
   const trigger = useRef(null)
   const clear = useCallback(() => setAdded(null), [])
+  // Items already in the cart count toward the product's available stock.
   const quantity = items.find((item) => item.id === product.id)?.quantity || 0
   const unavailable = !product.stock || quantity >= product.stock
   return (
@@ -36,6 +37,7 @@ export default function AddToCartButton({ product }) {
           onAdded={(count) => setAdded({ count, key: Date.now() })}
         />
       )}
+      {/* Remount the toast after each addition so its dismissal timer restarts. */}
       {added && (
         <CartToast
           key={added.key}

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="nb">
   <head>
+    <!-- Document metadata and mobile viewport settings for the storefront. -->
     <meta charset="UTF-8" />
     <meta name="theme-color" content="#49634d" />
     <meta
@@ -8,11 +9,13 @@
       content="Utforsk produkter, finn nye favoritter og lag din egen handlekurv i Abyrvalg."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Vite supplies the deployment base used by the GitHub Pages route restoration script. -->
     <meta name="app-base-path" content="%BASE_URL%" />
     <title>Abyrvalg små funn, store muligheter</title>
     <script src="%BASE_URL%github-pages-restore.js"></script>
   </head>
   <body>
+    <!-- React mounts the routed application and its shared providers here. -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

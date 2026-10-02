@@ -18,6 +18,7 @@ export default function AdminContentPage() {
   const { t } = useLanguage()
   const [feedback, setFeedback] = useState('')
   const [imageBusy, setImageBusy] = useState(false)
+  // Adapt store content to the shared draft and image-protection lifecycle.
   const editor = useAdminDraft(
     contentDraft,
     (content) => ({ products: {}, content }),
@@ -29,6 +30,7 @@ export default function AdminContentPage() {
     if (imageBusy) return
     setImageBusy(true)
     try {
+      // Save content against the original configuration without replacing product edits.
       const next = await save(
         { ...base, content: contentOverrides(draft) },
         base,
@@ -52,6 +54,7 @@ export default function AdminContentPage() {
         {t('Use fictional information only. Text is displayed as plain text.')}
       </p>
       <AdminConflict editor={editor} busy={imageBusy} />
+      {/* Convert field-first content into the language-first shape used by the inputs. */}
       <AdminTextFields
         values={Object.fromEntries(
           ['nb', 'en'].map((language) => [

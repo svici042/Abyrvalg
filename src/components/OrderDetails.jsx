@@ -3,6 +3,7 @@ import { STATUS_LABELS } from '../utils/orders'
 import OrderSummary from './OrderSummary'
 import styles from './Orders.module.css'
 
+// Keep transaction facts from the saved order, even when the summary uses a converted quote.
 export default function OrderDetails({ order, quote = order }) {
   const { t, language } = useLanguage()
   return (

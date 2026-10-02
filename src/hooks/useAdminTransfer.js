@@ -24,11 +24,13 @@ import {
 import { assertExportSize, MAX_CONFIG_SIZE } from '../utils/exportLimit'
 import { ANIMATION_IMPORT_PROMPT } from '../utils/imageValidation'
 
+// Coordinate configuration backups with the separately stored uploaded images.
 export function useAdminTransfer() {
   const { config, save, warning } = useAdmin()
   const { t } = useLanguage()
   const [feedback, setFeedback] = useState('')
   const [busy, setBusy] = useState(false)
+  // Share progress and error handling across all administration transfer actions.
   async function run(action) {
     setBusy(true)
     setFeedback('')
@@ -48,8 +50,10 @@ export function useAdminTransfer() {
     return run(async () => {
       const refs = imageReferences(config)
       const exportId = crypto.randomUUID()
+      // Prevent concurrent cleanup from deleting images while the backup is assembled.
       await protectImages(exportId, refs)
       try {
+        // Include configuration bytes in the size budget before encoding image data.
         const overhead = new TextEncoder().encode(
           JSON.stringify({ ...config, images: {} }),
         ).length
@@ -76,6 +80,7 @@ export function useAdminTransfer() {
   }
   function importConfig(event) {
     const file = event.target.files?.[0]
+    // Allow selecting the same file again after a cancelled or failed import.
     event.target.value = ''
     if (!file) return
     return run(async () => {
@@ -84,6 +89,7 @@ export function useAdminTransfer() {
       try {
         if (file.size > MAX_CONFIG_SIZE)
           throw Error('Configuration file must be under 50 MB.')
+        // Validate settings and obtain consent before writing any uploaded image bytes.
         const payload = JSON.parse(await file.text())
         const next = validateConfig(payload)
         if (hasHttpImages(next))
@@ -116,6 +122,7 @@ export function useAdminTransfer() {
           },
         )
         imported = Object.values(mapping)
+        // Imported uploads receive local IDs; rewrite every reference before saving.
         const remap = (reference) => mapping[reference] || reference
         for (const product of Object.values(next.products)) {
           product.thumbnail = remap(product.thumbnail)
@@ -126,6 +133,7 @@ export function useAdminTransfer() {
         committed = true
         setFeedback('Configuration imported in this browser.')
       } catch (error) {
+        // Roll back staged uploads only when the configuration was not committed.
         if (!committed) await rollbackImages(imported)
         if (
           ['Invalid demo configuration'].includes(error.message) ||
@@ -136,6 +144,7 @@ export function useAdminTransfer() {
           )
         throw error
       } finally {
+        // A cleanup failure must not undo an otherwise successful import.
         if (committed) {
           try {
             await releaseImages(imported)
@@ -152,6 +161,7 @@ export function useAdminTransfer() {
   function reset() {
     let expectedRaw
     try {
+      // Capture the stored version before confirmation to detect intervening writes.
       expectedRaw = localStorage.getItem(ADMIN_KEY)
     } catch {
       setFeedback(
