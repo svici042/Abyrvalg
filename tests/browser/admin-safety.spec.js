@@ -643,11 +643,50 @@ test('closed-tab uploads become eligible for explicit cleanup', async ({
   await prepare(second)
   await second.goto('/admin/content')
   await upload(second)
-  await page.getByRole('button', { name: 'Clean up unused uploads' }).click()
-  expect(await keys(page)).toHaveLength(1)
+  await expect(second.getByRole('group', { name: 'Logo image' })).toBeEnabled()
+  const [reference] = await keys(page)
+  expect(reference).toMatch(/^image:/)
+  let draftSession
+  await expect
+    .poll(async () => {
+      draftSession = await second.evaluate((reference) => {
+        return Object.keys(localStorage).find(
+          (name) =>
+            name.startsWith('abyrvalg-draft:') &&
+            JSON.parse(localStorage.getItem(name)).includes(reference),
+        )
+      }, reference)
+      return Boolean(draftSession)
+    })
+    .toBe(true)
+  const cleanup = page.getByRole('button', { name: 'Clean up unused uploads' })
+  const completed = (count) =>
+    page.getByRole('status').filter({
+      hasText: `Removed ${count} unused uploads. Saved images and active drafts are protected.`,
+    })
+  await cleanup.click()
+  // A click starts asynchronous cleanup; its status confirms the transaction finished.
+  await expect(completed(0)).toBeVisible()
+  await expect(cleanup).toBeEnabled()
+  expect(await keys(page)).toEqual([reference])
   await second.close()
-  await page.getByRole('button', { name: 'Clean up unused uploads' }).click()
-  await expect.poll(() => keys(page)).toHaveLength(0)
+  // Observe this exact session's lock release after closing the page,
+  // without waiting for or releasing other tabs' locks.
+  await expect
+    .poll(() =>
+      page.evaluate(async (name) => {
+        const { held, pending } = await navigator.locks.query()
+        return [...held, ...pending].some((lock) => lock.name === name)
+      }, draftSession),
+    )
+    .toBe(false)
+  await cleanup.click()
+  await expect(completed(1)).toBeVisible()
+  await expect(cleanup).toBeEnabled()
+  expect(await keys(page)).toEqual([])
+  expect(
+    await page.evaluate((name) => localStorage.getItem(name), draftSession),
+  ).toBeNull()
 })
 
 for (const operation of ['import', 'reset']) {

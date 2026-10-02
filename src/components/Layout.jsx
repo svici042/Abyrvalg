@@ -67,7 +67,7 @@ export default function Layout() {
         </div>
         <p>{storeText('contact')}</p>
         <p className={styles.copyright}>
-          © {new Date().getFullYear()} {storeText('storeName')}
+          © {new Date().getFullYear()} Bim &amp; Bom
         </p>
       </footer>
     </>

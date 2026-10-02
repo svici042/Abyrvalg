@@ -1,4 +1,9 @@
 export default {
+  'Pause animation': 'Sett animasjonen på pause',
+  'Resume animation': 'Fortsett animasjonen',
+  'Animation paused by system preference':
+    'Animasjonen er stoppet av systeminnstillingen',
+  'Page {page} of {pages}': 'Side {page} av {pages}',
   'Animated backups must have at most 300 frames and 64 million frame pixels.':
     'Animerte sikkerhetskopier kan ha maksimalt 300 bilderammer og 64 millioner bilderammepiksler.',
   'This backup contains animated images. Restore their original bytes to preserve animation? Original metadata will also be retained. Only continue with a trusted backup.':

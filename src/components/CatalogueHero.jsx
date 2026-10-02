@@ -2,11 +2,13 @@ import { HERO_HEADING, HERO_TEXT } from '../config/storeContent'
 import { useStoreContent } from '../hooks/useStoreContent'
 import { useLanguage } from '../hooks/useLanguage'
 import styles from '../pages/CataloguePage.module.css'
+import { useHeroMotion } from '../hooks/useHeroMotion'
 
 // Decorative artwork is hidden from assistive technology; the link targets the catalogue.
 export default function CatalogueHero() {
   const { t } = useLanguage()
   const { content, storeText } = useStoreContent()
+  const { paused, reduced, toggle } = useHeroMotion()
   return (
     <>
       <section className={styles.hero}>
@@ -38,17 +40,33 @@ export default function CatalogueHero() {
             {t('Explore the collection')} <span aria-hidden="true">↗</span>
           </a>
         </div>
-        <div className={styles.art} aria-hidden="true">
-          <span className={styles.orbit} />
-          <span className={styles.star}>✳</span>
-          <span className={styles.artLabel}>
-            {t('CHOSEN FOR')}
-            <br />
-            {t('THE CURIOUS.')}
-          </span>
-          <span className={styles.artBottom}>
-            {storeText('storeName')} / {t('Everyday finds')}
-          </span>
+        <div className={styles.artArea} data-paused={paused}>
+          <div className={styles.art} aria-hidden="true">
+            <span className={styles.orbit} />
+            <span className={styles.star}>✳</span>
+            <span className={styles.artLabel}>
+              {t('CHOSEN FOR')}
+              <br />
+              {t('THE CURIOUS.')}
+            </span>
+            <span className={styles.artBottom}>
+              {storeText('storeName')} / {t('Everyday finds')}
+            </span>
+          </div>
+          <button
+            className={styles.motionControl}
+            type="button"
+            disabled={reduced}
+            onClick={toggle}
+          >
+            {t(
+              reduced
+                ? 'Animation paused by system preference'
+                : paused
+                  ? 'Resume animation'
+                  : 'Pause animation',
+            )}
+          </button>
         </div>
       </section>
       <div className={styles.intro}>

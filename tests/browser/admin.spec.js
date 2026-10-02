@@ -14,6 +14,10 @@ test.beforeEach(async ({ page }) => {
 })
 async function edit(page, id = 25) {
   await page.goto('/admin/products')
+  if (id > 12) {
+    const next = page.getByRole('button', { name: /^(Next|Neste)$/ })
+    for (let index = 1; index < Math.ceil(id / 12); index++) await next.click()
+  }
   await page
     .getByRole('button', {
       name: new RegExp(`^(Edit product|Rediger produkt) #${id}$`),
@@ -59,6 +63,8 @@ test('complete catalogue editing, currency stability, refresh and individual res
     ),
   ).toBe(10)
   await page.reload()
+  await page.getByRole('button', { name: 'Next', exact: true }).click()
+  await page.getByRole('button', { name: 'Next', exact: true }).click()
   await page
     .getByRole('button', { name: 'Edit product #25', exact: true })
     .click()
@@ -320,6 +326,9 @@ for (const language of ['en', 'nb'])
           ),
         ).toBeVisible()
       }
+      await expect(page.locator('footer')).toContainText(
+        `© ${new Date().getFullYear()} Bim & Bom`,
+      )
       await expect(page.locator('b')).toHaveCount(0)
       await expect(page.locator('header')).toContainText(
         language === 'en' ? 'Demo Store' : 'Demobutikk',

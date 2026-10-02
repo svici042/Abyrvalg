@@ -44,6 +44,29 @@
   padding: 13px 18px;
   border-radius: 5px;
 }
+.artArea {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background: var(--art);
+}
+.motionControl {
+  justify-self: end;
+  margin: 4px 12px 8px;
+  font-size: 0.8125rem;
+  height: 52px;
+  max-width: calc(100% - 24px);
+}
+.artArea[data-paused='true'] .star,
+.artArea[data-paused='true'] .orbit {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .orbit {
+    animation: none;
+  }
+}
 .art {
   position: relative;
   display: grid;
