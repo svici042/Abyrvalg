@@ -74,8 +74,7 @@ for (const language of ['nb', 'en']) {
           fullPage: true,
         })
         const pause = page.getByRole('button', {
-          name:
-            language === 'nb' ? 'Sett animasjonen på pause' : 'Pause animation',
+          name: language === 'nb' ? 'Pause animasjon' : 'Pause animation',
         })
         await pause.focus()
         expect(

@@ -1,6 +1,9 @@
 // Norwegian translations keyed by the English messages used by administration controls.
 export default {
-  'Pause animation': 'Sett animasjonen på pause',
+  Pause: 'Pause',
+  Resume: 'Fortsett',
+  Paused: 'Pauset',
+  'Pause animation': 'Pause animasjon',
   'Resume animation': 'Fortsett animasjonen',
   'Animation paused by system preference':
     'Animasjonen er stoppet av systeminnstillingen',

@@ -58,14 +58,22 @@ export default function CatalogueHero() {
             type="button"
             disabled={reduced}
             onClick={toggle}
-          >
-            {t(
+            aria-label={t(
               reduced
                 ? 'Animation paused by system preference'
                 : paused
                   ? 'Resume animation'
                   : 'Pause animation',
             )}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              {paused && !reduced ? (
+                <path d="M3 1.5 10 6 3 10.5Z" fill="currentColor" />
+              ) : (
+                <path d="M2 1h3v10H2zm5 0h3v10H7z" fill="currentColor" />
+              )}
+            </svg>
+            {t(reduced ? 'Paused' : paused ? 'Resume' : 'Pause')}
           </button>
         </div>
       </section>
