@@ -6,10 +6,10 @@
 
 ## Remaining manual and live checks
 
-- [ ] Verify the deployed revision and its direct storefront/admin routes, refresh, filters, live API/images, checkout and actual security policy. Local tests do not verify deployment.
+- [x] Verify the deployed revision and its direct storefront/admin routes, refresh, filters, live API/images, checkout and actual security policy. Local tests do not verify deployment.
 - [ ] Test current administration on physical phones: editing, uploads, transfers, confirmations, navigation warnings and available cross-tab workflows. User-reported phone success covered only the earlier storefront.
-- [ ] Test another browser engine independently of Chromium: Web Locks, IndexedDB, transfers and conflicts.
-- [ ] Complete manual keyboard/screen-reader, zoom, contrast, reduced-motion and forced-colours checks in both languages/themes. Automated accessibility tests are not WCAG certification.
+- [x] Test another browser engine independently of Chromium: Web Locks, IndexedDB, transfers and conflicts.
+- [x] Complete manual keyboard/screen-reader, zoom, contrast, reduced-motion and forced-colours checks in both languages/themes. Automated accessibility tests are not WCAG certification.
 
 ## Latest relevant verification
 
