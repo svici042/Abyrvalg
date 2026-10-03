@@ -1,15 +1,8 @@
 # Current follow-up
 
-## Implemented locally
-
-- [x] Webshop and browser-local NO/EN administration, filtered product pagination, editable branding, fixed Bim & Bom copyright and accessible 40/60-second hero pause/reduced-motion behaviour.
-- [x] Revision/lock safeguards, explicit draft conflicts, checkout quote revalidation, validated transfers, image privacy/limits and protected cleanup. See [administration details](docs/ADMINISTRATION.md).
-- [x] Lazy administration routes, production HTML CSP, compatible Netlify image policy and SHA-pinned Actions with deployment-only write permissions. LF text convention is defined in `.gitattributes`.
-- [x] Cleanup test now waits for upload/session publication, completed cleanup feedback and release of the closed tab's exact lifetime lock; active-image and final orphan/session assertions remain strict.
-
 ## Required investigation
 
-- [ ] Identify the original intermittent closed-tab cleanup failure if it recurs. Its old failure trace is unavailable; the original test passed 20/20 bounded production runs, so the original cause is unconfirmed. Missing completion/lock-release barriers were corrected in the test, not established as the cause. On recurrence, retain the trace and capture held/pending session locks, published references and cleanup feedback/count before and after closing the tab; determine whether deletion ran while its draft was still protected. Do not add retries or weaken protection assertions.
+- [ ] Investigate closed-tab cleanup if the intermittent failure recurs. The original cause is unconfirmed and the old trace unavailable; repeated runs passed. Test synchronization fixes do not establish the cause. On recurrence, retain the trace and capture session locks, published references and cleanup feedback/count before and after tab closure to check whether deletion ran while the draft was protected. Do not add retries or weaken protection assertions.
 
 ## Remaining manual and live checks
 
@@ -20,7 +13,7 @@
 
 ## Latest relevant verification
 
-2026-10-02: touched-file formatting, six local documentation links, lint, all 29 unit tests and a fresh normal production build passed. Original and synchronized closed-tab cleanup tests each passed 20/20 bounded Chromium runs without retries; all 13 nearby upload/cleanup/conflict/rollback checks passed. Traces are retained in ignored test output. This does not explain the original failure or verify phones, other engines, screen readers or deployment.
+2026-10-02: formatting of touched files, six local documentation links, lint, 29 unit tests and production build passed. Original and synchronized closed-tab cleanup tests each passed 20/20 bounded production Chromium runs without retries; 13 related upload/cleanup/conflict/rollback checks passed. Phones, other engines, screen readers and deployment remain unverified; the original cleanup cause remains unknown.
 
 ## Conditional hosting or real-shop work
 

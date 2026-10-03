@@ -6,13 +6,7 @@ import CartPage from './pages/CartPage'
 import NotFoundPage from './pages/NotFoundPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderConfirmationPage from './pages/OrderConfirmationPage'
-import RequestState from './components/RequestState'
-import { useLanguage } from './hooks/useLanguage'
-
-function RouteLoading() {
-  const { t } = useLanguage()
-  return <RequestState mainHeading loading title={t('Loading products …')} />
-}
+import RouteLoading from './components/RouteLoading'
 
 // Keep administration code out of the initial storefront download.
 const lazyPage = (load) => async () => ({ Component: (await load()).default })
